@@ -15,9 +15,8 @@ Welcome to our AI-powered multi-agent system! This project aims to help users st
 * Command Line Interface (CLI) for user interaction
 * Plan generation using state-of-the-art AI models
 * Modular and scalable multi-agent design
-* Onion architecture with separation of data and functions
-* Vector embeddings for agent communication and collaboration
-* Continuous and step-by-step modes for user control
+* Vector embeddings for agent communication, collaboration and memory
+* Continuous and approval modes for safer user control
 
 ## 🛠 Installation
 ---
