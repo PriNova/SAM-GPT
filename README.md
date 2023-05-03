@@ -1,14 +1,16 @@
-# <h1 align="center">SAM-GPT</h1>
-<hr></hr>
+<h1 align="center">SAM-GPT</h1>
 
 <h2 align="center">🤖 AI-Powered Multi-Agent System</h2>
 <p></p>
+
+(This is an empty project. If you clone this project, you cannot run it like explained below)
+
 Welcome to our AI-powered multi-agent system! This project aims to help users streamline processes and automate repetitive tasks using a combination of NLP and multi-agent systems. We've designed a modular and scalable architecture that allows for easy extensibility and adaptability. Feel free to explore the code, contribute, or leave some feedback!
 
 <p></p>
 <p></p>
 
-## 🌟 Features
+## 🌟 Features (nothing's implemented so far)
 ---
 * Natural Language Processing (NLP) using OpenAI API and LangChain
 * Autonomous task generation and delegation
