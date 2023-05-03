@@ -25,7 +25,7 @@ Welcome to our AI-powered multi-agent system! This project aims to help users st
 
 ```bash
 git clone https://github.com/PriNova/SAM-GPT.git
-cd samgpt
+cd SAM-GPT
 ```	
 2. Create a virtual environment and install the dependencies:
 
