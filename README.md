@@ -60,6 +60,8 @@ We love contributions! If you're interested in helping out, here's what you can 
 3. Push to the branch (`git push origin feature/YourFeature`).
 4. Open a Pull Request.
 
+Please follow the [Code of Conduct](/documentation/CODE_OF_CONDUCT.md) when contributing to this project.
+
 Feel free to open an issue or submit a pull request for bug fixes, new features, or other improvements. We appreciate your support!
 
 ## 📜 License
