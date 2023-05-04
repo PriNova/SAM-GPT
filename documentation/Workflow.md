@@ -9,3 +9,5 @@ This is the actual work flow of the application:
 3. The Task_Manager takes the first task and passes it to the Task Delegate.
 4. The Task_Delegator selects the appropriate command to execute.
 5. The Task_Executor executes the command. The result is returned to the Task_Manager.
+
+[<- back](index.md)
