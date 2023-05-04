@@ -1,16 +1,16 @@
-<h1 align="center">SAM-GPT</h1>
+<p align="center">
+<img src="documentation/assets/logo2.png" width="100%" height="50%">
+</p>
 
-<h2 align="center">🤖 AI-Powered Multi-Agent System</h2>
+
+Welcome to SAM-GPT an AI-powered multi-agent system! This project aims to help users streamline processes and automate repetitive tasks using a combination of NLP and multi-agent systems. We've designed a modular and scalable architecture that allows for easy extensibility and adaptability. Feel free to explore the code, contribute, or leave some feedback!
+
+(This is a project in progress. It is not production-ready.)
+
+<p></p>
 <p></p>
 
-(This is an empty project. If you clone this project, you cannot run it like explained below)
-
-Welcome to our AI-powered multi-agent system! This project aims to help users streamline processes and automate repetitive tasks using a combination of NLP and multi-agent systems. We've designed a modular and scalable architecture that allows for easy extensibility and adaptability. Feel free to explore the code, contribute, or leave some feedback!
-
-<p></p>
-<p></p>
-
-## 🌟 Features (nothing's implemented so far)
+## 🌟 Upcoming Features
 ---
 * Natural Language Processing (NLP) using OpenAI API and LangChain
 * Autonomous task generation and delegation
@@ -33,7 +33,7 @@ cd SAM-GPT
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 3. Set up your API keys and other configuration settings in a .env file or as environment variables.
 
