@@ -49,7 +49,11 @@ The application supports a command-line interface for interacting with the multi
 
 ## 📖 Documentation
 ---
-You can find detailed documentation for the functions, classes, and modules in the source code docstrings. We follow the Google Python Style Guide for docstring formatting.
+ The general project structure, use-cases, and roadmap can be found [here](/documentation/index.md).
+
+ You can find detailed documentation for the functions, classes, and modules in the source code docstrings.
+ 
+ We follow the Google Python Style Guide for docstring formatting.
 
 📈 Contributing
 ---
