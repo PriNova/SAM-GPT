@@ -76,6 +76,6 @@ This project is MIT licensed.
 ---
 If you have any questions, feel free to reach out to us!
 
-GitHub: [PriNova](https://github.com/PriNova)
+Discussion: [Discussions](https://github.com/PriNova/SAM-GPT/discussions)
 
-Email: [info@prinova.de](mailto:info@prinova.de)
+Issues: [Issue](https://github.com/PriNova/SAM-GPT/issues)
