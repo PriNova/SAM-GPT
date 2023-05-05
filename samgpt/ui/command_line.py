@@ -5,31 +5,30 @@ from colorama import init, Fore, Style
 
 init(autoreset=True)  # Automatically reset colors after each print
 
-def prompt_user_input(prompt):
-    """
-    Prompt the user for input.
+# Prompt the user for input and returns the input from the user
+def prompt_user_input(prompt, style = Fore.GREEN ):
+    return input(f"{style}{Style.BRIGHT}{prompt}{Style.RESET_ALL} ")
 
-    Args:
-        prompt (str): The prompt to display to the user.
+# Display AI output
+# input message to display and color style
+def ai_message(message, style = Fore.YELLOW):
+    print(f"{style}{Style.BRIGHT}{message}{Style.RESET_ALL}")
 
-    Returns:
-        The input from the user.
-    """
-    return input(f"{Fore.GREEN}{Style.BRIGHT}{prompt}{Style.RESET_ALL} ")
+# Display system message
+# input: message to display and color style
+def system_message(message, style = Fore.GREEN):
+    print(f"{style}{message}{Style.RESET_ALL}")
 
-def display_ai_output(message):
-    """
-    Display AI output.
-    
-    Args:
-        message (str): Message to display.
-    """
-    print(f"{Fore.YELLOW}{Style.BRIGHT}{message}{Style.RESET_ALL}")
+# Display debug message
+# input: message to display and color style
+def debug_message(message, style = Fore.RED):
+    print(f"{style}{message}{Style.RESET_ALL}")
+
 
 def main():
-    print("Welcome to SAM-GPT!")
-    user_goal = prompt_user_input("Please input your goal: ")
-    display_ai_output(f"Your goal: {user_goal}")
+    system_message("Welcome to SAM-GPT!", Fore.GREEN)
+    user_goal = prompt_user_input("Please input your goal:")
+    ai_message(f"Your goal: {user_goal}", Fore.YELLOW)
 
 if __name__ == "__main__":
     main()

@@ -9,7 +9,6 @@ This document outlines the code writing style and paradigm that contributors sho
 - Optimize for readability and maintainability.
 - Prioritize data-oriented programming and onion architecture principles.
 - Write detailed and clear documentation for all functions, classes, and modules.
-- Use version control and continuous integration.
 
 ## Code Organization
 
@@ -25,13 +24,11 @@ This document outlines the code writing style and paradigm that contributors sho
 
 2. **Use clear and descriptive variable and function names**: Choose variable and function names that clearly indicate their purpose and improve code readability.
 
-3. **Write docstrings**: Document your functions and classes using docstrings, following best practices like the [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) or the [reStructuredText format](https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html).
+3. **Use appropriate data structures**: Choose the most appropriate data structures for your specific use case to optimize performance and readability.
 
-4. **Use appropriate data structures**: Choose the most appropriate data structures for your specific use case to optimize performance and readability.
+4. **Keep functions small and focused**: Functions should have a single responsibility and be limited in size to improve readability and maintainability.
 
-5. **Keep functions small and focused**: Functions should have a single responsibility and be limited in size to improve readability and maintainability.
-
-6. **Error handling**: Gracefully handle errors and exceptions, providing informative error messages where appropriate.
+5. **Error handling**: Gracefully handle errors and exceptions, providing informative error messages where appropriate.
 
 ## Testing and Documentation
 
