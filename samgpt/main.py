@@ -16,8 +16,8 @@ def main() -> None:
         cmd.ai_message("Sorry, I cannot generate a plan for you.")
     else:
         cmd.ai_message(plan[0])
-        ioutils.save_plan(goal=userGoal, plan=plan[1], filename="plan.txt")
-        tg.plan_tracking(goal=userGoal, plan=plan[1])
+        ioutils.save_plan(goal=userGoal, plan=plan[1], filename="plan.json")
+        tg.task_tracking(goal=userGoal, plan=plan[1])
     
 if __name__ == "__main__":
     main()

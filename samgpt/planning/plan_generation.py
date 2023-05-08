@@ -1,7 +1,8 @@
 import re
+import json
 import samgpt.nlp.nlp as nlp
 import samgpt.utils.io_utils as ioutils
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 
 # A function which generates a plan based on the user's goal
@@ -9,11 +10,11 @@ def generate_plan(goal) -> Optional[List[str]|None]:
     planPrompt = create_plan_prompt(goal)
     response = nlp.start_multi_prompt_inference(message=planPrompt)
     extractedPlan = extract_plan_with_regex(response)
-    
+    jsonFormattedPlan = formatAsJson(extractedPlan)
     if not extractedPlan:
         return None
 
-    return [response, extractedPlan]
+    return [response, jsonFormattedPlan]
     
 
 # A function which creates a highly efficient prompt includes the user's goal
@@ -60,3 +61,21 @@ def extract_plan_with_regex(text) -> str:
 
     # No matching pattern found
     return 'No plan created'
+
+# Format extracted plan as a JSON Object.
+def formatAsJson(extractedPlan: str) -> str:
+    # Split the output into tasks using newline character
+    tasks = extractedPlan.strip().split("\n")
+
+    # Create a list of dictionaries for each task
+    plan = [
+        {
+            "id": i + 1,
+            "description": task,
+            "status": "pending",
+            "subtasks": []
+        }
+        for i, task in enumerate(tasks)
+    ]
+    plan_json = json.dumps(plan, indent=4)
+    return plan_json
