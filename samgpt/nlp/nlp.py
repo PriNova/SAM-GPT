@@ -3,6 +3,7 @@
 from typing import List, Dict, Optional
 import requests
 import json
+import dotenv
 
 default_chat_config: Dict[str, any] = { # type: ignore
     "model": 'gpt-3.5-turbo',
@@ -14,7 +15,9 @@ default_chat_config: Dict[str, any] = { # type: ignore
     "stream": False
 }
 
-openAI_model = ['https://api.openai.com/v1/chat/completions', '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']
+OPENAI_API_KEY = dotenv.get_key('.env', 'OPENAI_API_KEY')
+
+openAI_model = ['https://api.openai.com/v1/chat/completions', OPENAI_API_KEY]
 free_model = ['https://free.churchless.tech/v1/chat/completions', '']
 
 # define the Model enum
