@@ -6,8 +6,14 @@ from colorama import init, Fore, Style
 init(autoreset=True)  # Automatically reset colors after each print
 
 # Prompt the user for input and returns the input from the user
-def prompt_user_input(prompt, style = Fore.BLUE ):
-    return input(f"{style}{Style.BRIGHT}{prompt}{Style.RESET_ALL} ")
+# If input is empty, prompt again
+def prompt_user_input(prompt, style = Fore.BLUE):
+    while True:
+        user_input = input(f"{style}{Style.BRIGHT}{prompt}{Style.RESET_ALL}")
+        if user_input:
+            return user_input
+        else:
+            system_message("No Goal defined!", style = Fore.RED)
 
 # Display AI output
 # input message to display and color style
