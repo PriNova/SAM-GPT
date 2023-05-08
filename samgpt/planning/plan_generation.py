@@ -7,8 +7,7 @@ from typing import List
 # A function which generates a plan based on the user's goal
 def generate_plan(goal):
     plan_prompt = create_plan_prompt(goal)
-    message = [{'role': 'assistant', 'content': plan_prompt},  {'role': 'user', 'content': 'Create the plan based on the goal.'}]
-    response = nlp.start_multi_prompt_inference(message=message)
+    response = nlp.start_multi_prompt_inference(message=plan_prompt)
     extracted_plan = extract_plan_with_regex(response)
     folder = 'plans'
     if not extracted_plan:
@@ -21,7 +20,7 @@ def generate_plan(goal):
 
 # A function which creates a highly efficient prompt includes the user's goal
 def create_plan_prompt(goal):
-    prompt = """You are PlanMasterGPT, a plan generator that helps users achieve their desired goals by creating, modifying, and expanding a plan to ensure its successful completion. Play to your strengths as an LLM and pursue simple strategies without legal complications. You answer briefly and concisely. Do not describe your actions. Only output in the format given.
+    prompt = [{'role': 'assistant', 'content': """You are PlanMasterGPT, a plan generator that helps users achieve their desired goals by creating, modifying, and expanding a plan to ensure its successful completion. Play to your strengths as an LLM and pursue simple strategies without legal complications. You answer briefly and concisely. Do not describe your actions. Only output in the format given.
     
 Perform the following actions:
 
@@ -32,9 +31,8 @@ Goal: {}
 
 Explicitly format the output as follows:
 
-Plan: (short list that tracks long-term tasks)""".format(goal)
-    #print(prompt)
-    #prompt = f"Create a plan for the user based on the goal: {goal}\nThe output should be a parsable JSON object for further processing."
+Plan: (short list that tracks long-term tasks)""".format(goal)},
+{'role': 'user', 'content': 'Create the plan based on the goal.'}]
     return prompt
 
 # extract the plan from text
