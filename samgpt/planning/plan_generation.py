@@ -2,15 +2,18 @@ import samgpt.nlp.nlp as nlp
 
 def generate_plan(goal):
     plan_prompt = create_plan_prompt(goal)
-    response = nlp.start_inference(role = "assistant", prompt = plan_prompt)
+    message = [{'role': 'assistant', 'content': plan_prompt},  {'role': 'user', 'content': 'Create the plan based on the goal.'}]
+    response = nlp.start_multi_prompt_inference(message=message)
     return response
 
 # A function which creates a highly efficient prompt includes the user's goal
 def create_plan_prompt(goal):
-    prompt = """Perform the following actions:
+    prompt = """You are PlanMasterGPT, a plan generator that helps users achieve their desired goals by creating, modifying, and expanding a plan to ensure its successful completion. Play to your strengths as an LLM and pursue simple strategies without legal complications. You answer briefly and concisely. Do not describe your actions. Only output in the format given.
+    
+Perform the following actions:
 
 1. Analyze the goal.
-2. Create a plan into managable tasks based on the goal.
+2. Create a plan into manageable tasks based on the goal.
 
 Goal: {}
 

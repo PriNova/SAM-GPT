@@ -48,6 +48,10 @@ def getChatCompletion(model, messages: List[Dict[str, str]], config: Dict[str, s
     return data['choices'][0]['message']['content'].encode('utf-8').decode('utf-8')
 
 # Start the inference
-def start_inference(role, prompt):
+def start__simple_inference(role, prompt):
     response = getChatCompletion(model, messages=[{'role': role, 'content': prompt}], config=default_chat_config, apiKey='')
+    return response
+
+def start_multi_prompt_inference(message):
+    response = getChatCompletion(model, messages= message, config=default_chat_config, apiKey='')
     return response
