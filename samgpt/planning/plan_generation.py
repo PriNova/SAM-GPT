@@ -60,9 +60,3 @@ def extract_plan_with_regex(text) -> str:
 
     # No matching pattern found
     return 'No plan created'
-    
-# create a function to split the plan into a list
-def split_plan_into_tasks(plan) -> List[str]:
-    # split the plan into a list of tasks
-    # return the list of tasks
-    return plan.split("\n")

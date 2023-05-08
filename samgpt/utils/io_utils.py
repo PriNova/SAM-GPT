@@ -7,9 +7,12 @@ def create_folder(folder) -> None:
 
 # Function to save the plan to a file in a specified folder. If file already exists, it will be overwritten.
 def save_plan(goal, plan, filename) -> None:
-    strippedGoal = goal.strip().replace(" ", "_")[:20].lower()
-    path = os.path.join(strippedGoal)
+    path = get_working_dir(goal)
     if not os.path.exists(path):
         create_folder(path)
     with open(os.path.join(path, '')+filename, "w") as f:
         f.write(plan)
+
+def get_working_dir(goal: str) -> str:
+    strippedGoal = goal.strip().replace(" ", "_")[:20].lower()
+    return os.path.join(strippedGoal)

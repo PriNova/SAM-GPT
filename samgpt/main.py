@@ -17,6 +17,7 @@ def main() -> None:
     else:
         cmd.ai_message(plan[0])
         ioutils.save_plan(goal=userGoal, plan=plan[1], filename="plan.txt")
-
+        tg.plan_tracking(goal=userGoal, plan=plan[1])
+    
 if __name__ == "__main__":
     main()
