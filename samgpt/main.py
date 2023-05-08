@@ -3,7 +3,7 @@ import samgpt.agents.task_generator as tg
 import samgpt.planning.plan_generation as pg
 
 # The main entry point of the application
-def main():
+def main() -> None:
     cmd.system_message("Welcome to SAM-GPT!")
     user_goal = cmd.prompt_user_input("Please input your goal:")
     cmd.system_message(f"Your goal: {user_goal}")

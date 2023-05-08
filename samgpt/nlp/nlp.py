@@ -15,22 +15,22 @@ default_chat_config: Dict[str, any] = { # type: ignore
     "stream": False
 }
 
-OPENAI_API_KEY = dotenv.get_key('.env', 'OPENAI_API_KEY')
+OPENAI_API_KEY : str|None = dotenv.get_key('.env', 'OPENAI_API_KEY')
 
-openAI_model = ['https://api.openai.com/v1/chat/completions', OPENAI_API_KEY]
-free_model = ['https://free.churchless.tech/v1/chat/completions', '']
+openAI_model: list = ['https://api.openai.com/v1/chat/completions', OPENAI_API_KEY]
+free_model: list = ['https://free.churchless.tech/v1/chat/completions', '']
 
 # define the Model enum
-Model = {
+Model: Dict = {
     'openai': openAI_model,
     'free': free_model
     }
 
 # Get the model from the Model enu
-model = Model['free']
+model: enumerate = Model['free']
 
 # Get the chat completion from the model
-def getChatCompletion(model, messages: List[Dict[str, str]], config: Dict[str, str], apiKey: Optional[str] = None, customHeaders: Optional[Dict[str, str]] = None):
+def getChatCompletion(model, messages: List[Dict[str, str]], config: Dict[str, str], apiKey: Optional[str] = None, customHeaders: Optional[Dict[str, str]] = None) -> str:
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {model[1]}'
@@ -48,10 +48,10 @@ def getChatCompletion(model, messages: List[Dict[str, str]], config: Dict[str, s
     return data['choices'][0]['message']['content'].encode('utf-8').decode('utf-8')
 
 # Start the inference
-def start__simple_inference(role, prompt):
+def start__simple_inference(role, prompt) -> str:
     response = getChatCompletion(model, messages=[{'role': role, 'content': prompt}], config=default_chat_config, apiKey='')
     return response
 
-def start_multi_prompt_inference(message):
+def start_multi_prompt_inference(message) -> str:
     response = getChatCompletion(model, messages= message, config=default_chat_config, apiKey='')
     return response
