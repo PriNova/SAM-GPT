@@ -12,7 +12,7 @@ Welcome to SAM-GPT an AI-powered multi-agent system! This project aims to help u
 
 ## 🌟 Upcoming Features
 ---
-* Natural Language Processing (NLP) using OpenAI API and LangChain
+* Natural Language Processing (NLP)
 * Autonomous task generation and delegation
 * Command Line Interface (CLI) for user interaction
 * Plan generation using state-of-the-art AI models
