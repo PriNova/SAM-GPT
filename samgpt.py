@@ -1,6 +1,6 @@
 # samgpt.py
 
-from samgpt.ui.command_line import main
+from samgpt import main
 
 if __name__ == "__main__":
-    main()
+    main.main()

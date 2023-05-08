@@ -23,12 +23,3 @@ def system_message(message, style = Fore.GREEN):
 # input: message to display and color style
 def debug_message(message, style = Fore.RED):
     print(f"{style}{message}{Style.RESET_ALL}")
-
-
-def main():
-    system_message("Welcome to SAM-GPT!", Fore.GREEN)
-    user_goal = prompt_user_input("Please input your goal:")
-    ai_message(f"Your goal: {user_goal}", Fore.YELLOW)
-
-if __name__ == "__main__":
-    main()
