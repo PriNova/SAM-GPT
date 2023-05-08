@@ -12,9 +12,8 @@ def generate_plan(goal) -> str:
     extracted_plan = extract_plan_with_regex(response)
     
     if not extracted_plan:
-        return f"No plan generated with respones:\n{response}"
-    #if not os.path.exists(folder):
-    #    ioutils.create_folder(folder)
+        return f"No plan generated with respone:\n{response}"
+    
     ioutils.save_plan(goal, extracted_plan, f"plan.txt")
     return response
     
