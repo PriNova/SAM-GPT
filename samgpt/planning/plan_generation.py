@@ -10,12 +10,12 @@ def generate_plan(goal) -> str:
     plan_prompt = create_plan_prompt(goal)
     response = nlp.start_multi_prompt_inference(message=plan_prompt)
     extracted_plan = extract_plan_with_regex(response)
-    folder = 'plans'
+    
     if not extracted_plan:
-        return response
-    if not os.path.exists(folder):
-        ioutils.create_folder(folder)
-    ioutils.save_plan(goal, extracted_plan, folder, f"plan.txt")
+        return f"No plan generated with respones:\n{response}"
+    #if not os.path.exists(folder):
+    #    ioutils.create_folder(folder)
+    ioutils.save_plan(goal, extracted_plan, f"plan.txt")
     return response
     
 
@@ -39,24 +39,24 @@ Plan: (short list that tracks long-term tasks)""".format(goal)},
 # extract the plan from text
 def extract_plan_with_regex(text) -> str:
     # Match numbered lists
-    match = re.search(r'Plan:\n((?:\d+\..+\n)+)', text)  # corrected regex pattern
+    match = re.search(r'Plan:\n+((?:\d+.+\n?)+)', text)  # corrected regex pattern
     if match:
         plan = re.sub(r'\n?\d+\..', '\n', match.group(1)).strip()
         return plan.strip()
 
     # Match bulletted lists
-    match = re.search(r'Plan:\n((?:•\s*.+\n)+)', text)
+    match = re.search(r'Plan:\n+((?:•\s*.+\n?)+)', text)
     if match:
         plan = re.sub(r'(•\s*)', '', match.group(1)).strip()
         return plan.strip()
 
     # Match lined lists
-    match = re.search(r'Plan:\n((?:-\s*.+\n)+)', text)
+    match = re.search(r'Plan:\n+((?:-\s*.+\n?)+)', text)
     if match:
         plan = re.sub(r'(-\s*)', '', match.group(1)).strip()
         return plan.strip()
     
-    match = re.search(r'Plan:\n([\s\S]*?)', text)
+    match = re.search(r'Plan:\n+([\s\S]*?)', text)
     if match:
         plan = match.group(1).strip()
         return plan.strip()
