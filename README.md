@@ -37,7 +37,7 @@ pip3 install -r requirements.txt
 ```
 3. Set up your API keys and other configuration settings in a .env file or as environment variables.
 
-4. Before running the application, you need to rename the `.env.template` file to `.env` and fill in your OpenAI API key. You can find your API key [here](https://platform.openai.com/).
+4. Before running the application, you need to rename the `.env.template` file to `.env` and fill in your OpenAI API key. You can find your API key [here](https://platform.openai.com/account/api-keys).
 
 5. Run the application:
 
