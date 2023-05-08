@@ -1,21 +1,19 @@
-import os
 import re
 import samgpt.nlp.nlp as nlp
 import samgpt.utils.io_utils as ioutils
-from typing import List
+from typing import List, Optional
 
 
 # A function which generates a plan based on the user's goal
-def generate_plan(goal) -> str:
-    plan_prompt = create_plan_prompt(goal)
-    response = nlp.start_multi_prompt_inference(message=plan_prompt)
-    extracted_plan = extract_plan_with_regex(response)
+def generate_plan(goal) -> Optional[List[str]|None]:
+    planPrompt = create_plan_prompt(goal)
+    response = nlp.start_multi_prompt_inference(message=planPrompt)
+    extractedPlan = extract_plan_with_regex(response)
     
-    if not extracted_plan:
-        return f"No plan generated with respone:\n{response}"
-    
-    ioutils.save_plan(goal, extracted_plan, f"plan.txt")
-    return response
+    if not extractedPlan:
+        return None
+
+    return [response, extractedPlan]
     
 
 # A function which creates a highly efficient prompt includes the user's goal
