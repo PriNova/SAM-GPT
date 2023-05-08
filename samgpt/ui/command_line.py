@@ -6,7 +6,7 @@ from colorama import init, Fore, Style
 init(autoreset=True)  # Automatically reset colors after each print
 
 # Prompt the user for input and returns the input from the user
-def prompt_user_input(prompt, style = Fore.GREEN ):
+def prompt_user_input(prompt, style = Fore.BLUE ):
     return input(f"{style}{Style.BRIGHT}{prompt}{Style.RESET_ALL} ")
 
 # Display AI output
