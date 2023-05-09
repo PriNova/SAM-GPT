@@ -43,7 +43,7 @@ Format the output as follows:
 
 Command: $command_name
 Thoughts: (Thoughts why the selected command is the best fit to the task)
-Critics: (Constructive self-critics wether $decomposeTask might be a better choice)
+Critics: (Constructive self-critics wether decomposeTask might be a better choice)
 Decomposition: (Decomposing the task in the most smallest, simplest and managable numbered task list sorted by priority. Append the appropriate command from the available command list)
 """},
-{'role': 'user', 'content': 'Choose the best command based on the task and goal.'}]
+{'role': 'user', 'content': 'Choose the best command based on the task and goal. Only provide the output in the format given'}]

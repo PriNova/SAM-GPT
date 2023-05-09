@@ -18,9 +18,8 @@ def save_plan(goal, plan, filename) -> None:
 # safe current task into file
 def save_current_task(goal: str, jsonTask: Dict) -> None:
     path = get_working_dir(goal)
-    taskID = jsonTask['id']
     task = json.dumps(jsonTask)
-    with open(os.path.join(path, '')+f"task_{taskID}.json", "w") as f:
+    with open(os.path.join(path, '')+f"task.json", "w") as f:
         f.write(task)
 
 def get_working_dir(goal: str) -> str:
