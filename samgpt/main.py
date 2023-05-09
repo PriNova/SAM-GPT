@@ -1,5 +1,5 @@
 import samgpt.ui.command_line as cmd
-import samgpt.agents.task_generator as tg
+import samgpt.planning.task_manager as tm
 import samgpt.agents.task_delegator as td
 import samgpt.agents.plan_generator as pg
 import samgpt.utils.io_utils as ioutils
@@ -21,7 +21,7 @@ def main() -> None:
     cmd.ai_message(cPlan[0])
     ioutils.save_plan(goal=userGoal, plan=cPlan[1], filename="plan.json")
 
-    firstTask : Dict = tg.get_task(plan=cPlan[1], index=0)
+    firstTask : Dict = tm.get_task(plan=cPlan[1], index=0)
     firstTask = manage_task(userGoal, cPlan, firstTask)
     cmd.system_message("Hold on. SAM-GPT will delegate your task.")
     response = td.delegate_task(userGoal, firstTask)
@@ -42,7 +42,7 @@ def manage_task(userGoal, cPlan, firstTask) -> Dict:
     elif kindOption == 3: # Skip Task
         index = firstTask["id"]
         firstTask["status"] = "Skipped"
-        firstTask = tg.get_task(plan=cPlan[1], index=index)
+        firstTask = tm.get_task(plan=cPlan[1], index=index)
         return manage_task(userGoal, cPlan, firstTask)
     return firstTask
     

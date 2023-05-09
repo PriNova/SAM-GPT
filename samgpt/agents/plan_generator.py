@@ -1,6 +1,6 @@
 # A function which generates a plan based on the user's goal
 import samgpt.nlp.nlp as nlp
-from samgpt.planning.plan_generation import extract_plan_with_regex, formatAsJson
+from samgpt.planning.plan_manager import extract_plan_with_regex, format_as_json
 
 from typing import List, Optional
 
@@ -27,7 +27,8 @@ def generate_plan(goal) -> Optional[List[str]|None]:
     planPrompt = create_plan_prompt(goal)
     response = nlp.start_multi_prompt_inference(message=planPrompt)
     extractedPlan = extract_plan_with_regex(response)
-    jsonFormattedPlan = formatAsJson(extractedPlan)
+    jsonFormattedPlan = format_as_json(extractedPlan)
+    
     if not extractedPlan:
         return None
 

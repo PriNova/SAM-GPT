@@ -31,7 +31,7 @@ def extract_plan_with_regex(text) -> str:
     return 'No plan created'
 
 # Format extracted plan as a JSON Object.
-def formatAsJson(extractedPlan: str) -> str:
+def format_as_json(extractedPlan: str) -> str:
     # Split the output into tasks using newline character
     tasks = extractedPlan.strip().split("\n")
 
