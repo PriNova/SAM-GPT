@@ -1,11 +1,11 @@
-from typing import List, Dict, Any
+from typing import List, Dict
 
 # track the tasks and the plan based on the users goal
 def get_task(plan: List, index: int) -> Dict:
     #jsonPlan: Dict = json.loads(plan)
     if index < len(plan):
         return plan[index]
-    return plan[0]
+    return {}
 
 # create a function to split the plan into a list
 def split_plan_into_tasks(plan) -> List[str]:
@@ -14,11 +14,9 @@ def split_plan_into_tasks(plan) -> List[str]:
     return plan.split("\n")
 
 
+# Filter out all tasks by status
 def filter_plan_for_tasks(jsonPlan, filter: str) -> List:
     return [task for task in jsonPlan if task["status"] == filter]
-
-def max_tasks(plan: List)-> int:
-    return len(plan)
 
 # Update the plan by replacing the task with the updated task
 def update_task_by_id(plan: List, task_id: str, updated_info: Dict):
@@ -42,3 +40,24 @@ def update_task_by_id(plan: List, task_id: str, updated_info: Dict):
 
     # Return the updated plan
     return plan
+
+
+# Approves a task by setting the status to "In Progress" and updating the plan
+def approve_task(cPlan, currentTask):
+    currentTask['status'] = "In Progress"
+    cPlan = update_task_by_id(cPlan, currentTask['id'], {'status': currentTask['status']})
+    return cPlan, currentTask, "Task approved."
+
+# Modifies a task by updating the description and updating the plan
+def modify_task(cPlan, currentTask, newDescription: str):
+    currentTask['description'] = newDescription
+    cPlan = update_task_by_id(cPlan, currentTask['id'], {'description': currentTask['description']})
+    return cPlan, currentTask, "Task modified"
+
+# Skipping a task by setting the status to "Skipped", updating the plan and fetch the next task
+def skip_task(cPlan, currentTask):
+    index: int = int(currentTask['id'])
+    currentTask['status'] = "Skipped"
+    cPlan = update_task_by_id(cPlan, currentTask['id'], {'status': currentTask['status']})
+    newTask =  get_task(plan=cPlan, index=index)
+    return cPlan, newTask, "Task skipped."

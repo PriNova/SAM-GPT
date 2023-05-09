@@ -30,21 +30,27 @@ def debug_message(message, style = Fore.RED) -> None:
     print(f"{style}{message}{Style.RESET_ALL}")
 
 # Dictionary of options to display
-options = {
+taskOptions = {
     1: "Approve Task",
     2: "Modify Task",
     3: "Skip Task"
 }
 
+decompOrExecute = {
+    1: "Decompose Task",
+    2: "Execute Task"
+}
+
 # Ask user for options to input
 # Tests these options for validity
-def ask_options() -> int:
+def ask_options(options) -> int:
     while True:
         try:
-            system_message(f"{Fore.GREEN}Options: {Style.RESET_ALL}")
+            system_message(f"Please select how to proceed further.")
+            system_message(f"Options: ")
             for i, option in enumerate(options.values()):
-                system_message(f"{Fore.GREEN}{i+1}. {option}{Style.RESET_ALL}")
-            system_message("\n")
+                system_message(f"{i+1}. {option}")
+
             option = int(prompt_user_input("Please select an option: "))
             if option in options.keys():
                 return option
@@ -76,7 +82,7 @@ def press_any_key_to_continue() -> None:
     input()
 
 def main() -> None:
-    result = ask_options()
+    result = ask_options(taskOptions)
     print(result)
 
 if __name__ == "__main__":
