@@ -11,7 +11,7 @@ def format_plan_as_json(extractedPlan: str) -> List:
             "id": f"{i + 1}",
             "description": task,
             "status": "Pending",
-            "subtasks": []
+            "tasks": []
         }
         for i, task in enumerate(tasks)
     ]
@@ -24,11 +24,14 @@ def format_subtask_as_json(extractedSubtask: str, parentIndex: str) -> List:
     # Create a list of dictionaries for each task
     subtasks = [
         {
-            "id": f"{parentIndex}.{i + 1}",
+            "id": generate_task_id(parentIndex, i),
             "description": task,
             "status": "Pending",
-            "parent": parentIndex
+            "tasks": []
         }
         for i, task in enumerate(subtasks)
     ]
     return subtasks
+
+def generate_task_id(prefix, task_index):
+    return f"{prefix}.{task_index + 1}"

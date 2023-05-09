@@ -55,10 +55,11 @@ def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
         return manage_task(userGoal, cPlan, currentTask)
     elif kindOption == 3: # Skip Task
         cPlan, currentTask, message = tm.skip_task(cPlan, currentTask)
+        ioutils.save_plan(userGoal, json.dumps(cPlan), "plan.json")
         if currentTask == {}:
             cmd.system_message("Congratulations! You have completed your goal!")
             os._exit(0)
-            return {}
+        
         return manage_task(userGoal, cPlan, currentTask)
     
     cmd.system_message(message)
@@ -73,7 +74,7 @@ def decompose_task(cPlan: List, currentTask: Dict, response: str) -> List:
     print(decompose)
     jsonFormattedDecomp: List = samgpt.utils.string_utils.format_subtask_as_json(decompose, index)
     print(jsonFormattedDecomp)
-    cPlan[int(index) - 1]['subtasks'] = jsonFormattedDecomp
+    cPlan[int(index) - 1]['tasks'] = jsonFormattedDecomp
     return cPlan
     
 if __name__ == "__main__":
