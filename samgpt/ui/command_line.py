@@ -1,8 +1,6 @@
 # ui/command_line.py
 
-import sys
 from colorama import init, Fore, Style
-from typing import Dict
 
 init(autoreset=True)  # Automatically reset colors after each print
 
@@ -40,14 +38,14 @@ options = {
 
 # Ask user for options to input
 # Tests these options for validity
-def ask_options() -> str:
+def ask_options() -> int:
     while True:
         try:
             system_message(f"{Fore.GREEN}Options: {Style.RESET_ALL}")
             for i, option in enumerate(options.values()):
                 system_message(f"{Fore.GREEN}{i+1}. {option}{Style.RESET_ALL}")
             system_message("\n")
-            option = prompt_user_input("Please select an option: ")
+            option = int(prompt_user_input("Please select an option: "))
             if option in options.keys():
                 return option
             else:

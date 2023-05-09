@@ -2,11 +2,13 @@
 import samgpt.nlp.nlp as nlp
 from samgpt.planning.plan_manager import extract_plan_with_regex, format_as_json
 
-from typing import List, Optional
+from typing import List, Dict, Tuple
+
+
 
 
 # A function which creates a highly efficient prompt includes the user's goal
-def create_plan_prompt(goal) -> List[dict[str, str]]:
+def create_plan_prompt(goal) -> List:
     prompt = [{'role': 'system', 'content': """You are PlanMasterGPT, a plan generator that helps users achieve their desired goals by creating, modifying, and expanding a plan to ensure its successful completion. Play to your strengths as an LLM and pursue simple strategies without legal complications. You answer briefly and concisely. Do not describe your actions. Only output in the format given.
     
 Perform the following actions:
@@ -23,13 +25,13 @@ Plan: (short list that tracks long-term tasks)""".format(goal)},
     return prompt
 
 
-def generate_plan(goal) -> Optional[List[str]|None]:
+def generate_plan(goal) -> Tuple[str, List]:
     planPrompt = create_plan_prompt(goal)
-    response = nlp.start_multi_prompt_inference(message=planPrompt)
-    extractedPlan = extract_plan_with_regex(response)
-    jsonFormattedPlan = format_as_json(extractedPlan)
-    
-    if not extractedPlan:
-        return None
+    response: str = nlp.start_multi_prompt_inference(message=planPrompt)
+    extractedPlan: str = extract_plan_with_regex(response)
+    jsonFormattedPlan: List = format_as_json(extractedPlan)
 
-    return [response, jsonFormattedPlan]
+    if not extractedPlan:
+        return ("", [])
+    
+    return (response, jsonFormattedPlan)

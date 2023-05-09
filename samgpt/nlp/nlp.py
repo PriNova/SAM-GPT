@@ -42,7 +42,12 @@ def get_chat_completion(model, messages: List[Dict[str, str]], config: Dict[str,
     }
 
     response = requests.post(model[0], headers=headers, data=json.dumps(body))
-    response.raise_for_status()
+    repeat = 5
+    while response.status_code != 200 and repeat > 0:
+        response = requests.post(model[0], headers=headers, data=json.dumps(body))
+        repeat -= 1
+        
+    #response.raise_for_status()
     data = response.json()
     #To start content_without_first_linebreaks = content[2:]
     return data['choices'][0]['message']['content'].encode('utf-8').decode('utf-8')
