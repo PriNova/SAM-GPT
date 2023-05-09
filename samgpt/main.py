@@ -4,7 +4,7 @@ import samgpt.agents.task_delegator as td
 import samgpt.agents.plan_generator as pg
 import samgpt.utils.io_utils as ioutils
 
-from typing import List, Tuple, Dict
+from typing import List, Dict
 import json
 
 # The main entry point of the application
@@ -20,7 +20,6 @@ def main() -> None:
     response, plan = pg.generate_plan(userGoal)
     if response == "":
         cmd.system_message("Sorry, SAM-GPT cannot generate a plan for you.")
-    
     cmd.ai_message(response)
     ioutils.save_plan(goal=userGoal, plan=json.dumps(plan), filename="plan.json")
 

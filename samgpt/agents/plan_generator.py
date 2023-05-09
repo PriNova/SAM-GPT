@@ -2,7 +2,7 @@
 import samgpt.nlp.nlp as nlp
 from samgpt.planning.plan_manager import extract_plan_with_regex, format_as_json
 
-from typing import List, Dict, Tuple
+from typing import List, Tuple
 
 
 
