@@ -19,7 +19,7 @@ def generate_plan(goal) -> Optional[List[str]|None]:
 
 # A function which creates a highly efficient prompt includes the user's goal
 def create_plan_prompt(goal) -> List[dict[str, str]]:
-    prompt = [{'role': 'assistant', 'content': """You are PlanMasterGPT, a plan generator that helps users achieve their desired goals by creating, modifying, and expanding a plan to ensure its successful completion. Play to your strengths as an LLM and pursue simple strategies without legal complications. You answer briefly and concisely. Do not describe your actions. Only output in the format given.
+    prompt = [{'role': 'system', 'content': """You are PlanMasterGPT, a plan generator that helps users achieve their desired goals by creating, modifying, and expanding a plan to ensure its successful completion. Play to your strengths as an LLM and pursue simple strategies without legal complications. You answer briefly and concisely. Do not describe your actions. Only output in the format given.
     
 Perform the following actions:
 

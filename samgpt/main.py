@@ -1,5 +1,6 @@
 import samgpt.ui.command_line as cmd
 import samgpt.agents.task_generator as tg
+import samgpt.agents.task_delegator as td
 import samgpt.planning.plan_generation as pg
 import samgpt.utils.io_utils as ioutils
 
@@ -19,6 +20,10 @@ def main() -> None:
         ioutils.save_plan(goal=userGoal, plan=plan[1], filename="plan.json")
         firstTask : Dict = tg.task_tracking(goal=userGoal, plan=plan[1])
         ioutils.save_current_task(userGoal, firstTask)
+        cmd.ai_message(f"Your first task is: {firstTask}")
+        cmd.ai_message("Hold on. I will delegate your first task.")
+        response = td.delegate_task(userGoal,firstTask)
+        cmd.ai_message(f"Here is my response:\n{response}")
     
 if __name__ == "__main__":
     main()
