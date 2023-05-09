@@ -3,12 +3,12 @@ from typing import Dict
 import json
 
 # Function to check if a folder exists. If it does not, it will be created.
-def create_folder(folder) -> None:
+def create_folder(folder: str) -> None:
     if not os.path.exists(folder):
         os.makedirs(folder)
 
 # Function to save the plan to a file in a specified folder. If file already exists, it will be overwritten.
-def save_plan(goal, plan, filename) -> None:
+def save_plan(goal: str, plan: str, filename: str) -> None:
     path = get_working_dir(goal)
     if not os.path.exists(path):
         create_folder(path)

@@ -45,5 +45,12 @@ def format_as_json(extractedPlan: str) -> str:
         }
         for i, task in enumerate(tasks)
     ]
-    plan_json = json.dumps(plan, indent=4)
+    plan_json: str = json.dumps(plan, indent=4)
     return plan_json
+
+def set_status_for_task(plan_json: str, task_id: int, status: str) -> str:
+    plan = json.loads(plan_json)
+    for task in plan:
+        if task["id"] == task_id:
+            task["status"] = status
+    return json.dumps(plan, indent=4)

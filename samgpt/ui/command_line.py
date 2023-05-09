@@ -40,14 +40,14 @@ options = {
 
 # Ask user for options to input
 # Tests these options for validity
-def ask_options() -> int:
+def ask_options() -> str:
     while True:
         try:
             system_message(f"{Fore.GREEN}Options: {Style.RESET_ALL}")
             for i, option in enumerate(options.values()):
                 system_message(f"{Fore.GREEN}{i+1}. {option}{Style.RESET_ALL}")
             system_message("\n")
-            option = int(prompt_user_input("Please select an option: "))
+            option = prompt_user_input("Please select an option: ")
             if option in options.keys():
                 return option
             else:
