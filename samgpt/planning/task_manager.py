@@ -98,10 +98,10 @@ def update_parent_task_status(task):
     for subtask in task["tasks"]:
         update_parent_task_status(subtask)
 
-def traverse(task_list: List):
+def traverse(task_list: List, key:str, value: str):
     for task in task_list:
-        if task['status'] == 'Completed':
+        if task[key] == value:
             return task
         else:
             if len(task['tasks']) > 0:
-                return traverse(task['tasks'])
+                return traverse(task['tasks'], key, value)

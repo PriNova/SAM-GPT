@@ -9,7 +9,8 @@ setup(
     packages=["samgpt", 
               "samgpt.agents", 
               "samgpt.nlp", 
-              "samgpt.planning", 
+              "samgpt.planning"
+              "samgpt.tests",
               "samgpt.ui", 
               "samgpt.utils"],
     install_requires=requirements,
