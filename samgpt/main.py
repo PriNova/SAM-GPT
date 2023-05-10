@@ -4,7 +4,7 @@ import samgpt.agents.task_delegator as td
 import samgpt.agents.plan_generator as pg
 import samgpt.utils.io_utils as ioutils
 
-from typing import List, Dict
+from typing import List, Dict, Tuple
 import json
 import os
 
@@ -28,19 +28,28 @@ def main() -> None:
 
     # Task handling
     currentTask : Dict = tm.get_task(plan=plan, index=0)
-    currentTask = manage_task(userGoal, plan, currentTask)
-    cmd.system_message("Hold on. SAM-GPT will delegate your task.")
-    response = td.delegate_task(userGoal, currentTask)
-    cmd.ai_message(f"Here is my response:\n{response}")
+    while True:
+        currentTask = manage_task(userGoal, plan, currentTask)
+        cmd.system_message("Hold on. SAM-GPT will delegate your task.")
+        response = td.delegate_task(userGoal, currentTask)
+        cmd.ai_message(f"Here is my response:\n{response}")
 
-    # Decomposing or Executing
-    kindOption: int = cmd.ask_options(cmd.decompOrExecute)
-    if kindOption == 1: # Decompose
-        cmd.system_message("Hold on. SAM-GPT will decompose your task.")
-        plan = decompose_task(plan, currentTask, response)
-        ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
-    if kindOption == 2: # Execute
-        pass
+        # Decomposing or Executing
+        kindOption: int = cmd.ask_options(cmd.decompOrExecute)
+        if kindOption == 1: # Decompose
+            cmd.system_message("Hold on. SAM-GPT will decompose your task.")
+            plan = decompose_task(plan, currentTask, response)
+            currentTask = tm.find_next_pending_task(plan)
+            ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
+            if currentTask == {}:
+                cmd.system_message("Congratulations! You have completed your goal!")
+                os._exit(0)
+        if kindOption == 2: # Execute
+            currentTask['status'] = "Completed"
+            tm.find_and_update_task(plan, currentTask['id'], {'status': currentTask['status']})
+            currentTask = tm.find_next_pending_task(plan)
+            ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
+            ioutils.save_current_task(userGoal, currentTask)
 
 def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
     cmd.ai_message(f"\nYour current task is: {currentTask['description']} (Status: {currentTask['status']})\n")
@@ -51,15 +60,12 @@ def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
     elif kindOption == 2: # Modify Task
         newDescription = cmd.prompt_user_input("Please input your new task description: ")
         cPlan, currentTask, message = tm.modify_task(cPlan, currentTask, newDescription)
-        ioutils.save_plan(userGoal, json.dumps(cPlan), "plan.json")
         return manage_task(userGoal, cPlan, currentTask)
     elif kindOption == 3: # Skip Task
         cPlan, currentTask, message = tm.skip_task(cPlan, currentTask)
-        ioutils.save_plan(userGoal, json.dumps(cPlan), "plan.json")
         if currentTask == {}:
             cmd.system_message("Congratulations! You have completed your goal!")
             os._exit(0)
-        
         return manage_task(userGoal, cPlan, currentTask)
     
     cmd.system_message(message)
@@ -68,13 +74,12 @@ def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
     return currentTask
 
 def decompose_task(cPlan: List, currentTask: Dict, response: str) -> List:
-    index: str = currentTask['id']
-    print(index)
-    decompose = pg.extract_with_regex(response, "Decomposition:")
+    print(currentTask['id'])
+    decompose = pg.extract_with_regex(response, '')
     print(decompose)
-    jsonFormattedDecomp: List = samgpt.utils.string_utils.format_subtask_as_json(decompose, index)
+    jsonFormattedDecomp: List = samgpt.utils.string_utils.format_subtask_as_json(decompose, currentTask['id'])
     print(jsonFormattedDecomp)
-    cPlan[int(index) - 1]['tasks'] = jsonFormattedDecomp
+    tm.find_and_add_subtask(cPlan, currentTask['id'], jsonFormattedDecomp)
     return cPlan
     
 if __name__ == "__main__":
