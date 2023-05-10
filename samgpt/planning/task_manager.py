@@ -46,32 +46,33 @@ def update_task_by_id(plan: List, task_id: str, updated_info: Dict):
 # Approves a task by setting the status to "In Progress" and updating the plan
 def approve_task(cPlan: List, currentTask: Dict) -> Tuple[List, Dict, str]:
     currentTask['status'] = "In Progress"
-    find_and_update_task(cPlan, currentTask['id'], {'status': currentTask['status']})
+    #find_and_update_task(cPlan, currentTask['id'], {'status': currentTask['status']})
     return cPlan, currentTask, "Task approved."
 
 # Modifies a task by updating the description and updating the plan
 def modify_task(cPlan: List, currentTask: Dict, newDescription: str) -> Tuple[List, Dict, str]:
     currentTask['description'] = newDescription
-    find_and_update_task(cPlan, currentTask['id'], {'description': currentTask['description']})
+    #find_and_update_task(cPlan, currentTask['id'], {'description': currentTask['description']})
     return cPlan, currentTask, "Task modified"
 
 # Skipping a task by setting the status to "Skipped", updating the plan and fetch the next task
 def skip_task(cPlan: List, currentTask: Dict) -> Tuple[List, Dict, str]:
     currentTask['status'] = "Skipped"
-    find_and_update_task(cPlan, currentTask['id'], {'status': currentTask['status']})
+    #find_and_update_task(cPlan, currentTask['id'], {'status': currentTask['status']})
     newTask = find_next_pending_task(cPlan)
     return cPlan, newTask, "Task skipped."
 
-def find_and_update_task(tasks: List, task_id: str, updated_info: Dict):
+def find_and_update_task(tasks: List, task_id: str, updated_info: Dict) -> List:
     for task in tasks:
         if task["id"] == task_id:
             # Update task
             for key, value in updated_info.items():
                 task[key] = value
+            return tasks
         else:
             # Go through each sub-task
-            for subtask in task["tasks"]:
-                find_and_update_task(task["tasks"], task_id, updated_info)
+            return find_and_update_task(task["tasks"], task_id, updated_info)
+    return tasks
 
 def find_and_add_subtask(plan: List, parent_task_id: str, new_subtask: List):
     for task in plan:
@@ -87,7 +88,8 @@ def find_next_pending_task(plan: List) -> Dict:
         if task['status'] == "Pending":
             return task
         else:
-            return find_next_pending_task(task["tasks"])
+            for subtask in task["tasks"]:
+                return find_next_pending_task(task["tasks"])
     return {}
 
 def update_parent_task_status(task):
@@ -95,3 +97,11 @@ def update_parent_task_status(task):
         task["status"] = "completed"
     for subtask in task["tasks"]:
         update_parent_task_status(subtask)
+
+def traverse(task_list: List):
+    for task in task_list:
+        if task['status'] == 'Completed':
+            return task
+        else:
+            if len(task['tasks']) > 0:
+                return traverse(task['tasks'])

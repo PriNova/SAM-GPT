@@ -46,7 +46,7 @@ def main() -> None:
                 os._exit(0)
         if kindOption == 2: # Execute
             currentTask['status'] = "Completed"
-            tm.find_and_update_task(plan, currentTask['id'], {'status': currentTask['status']})
+            #plan = tm.find_and_update_task(plan, currentTask['id'], {'status': currentTask['status']})
             currentTask = tm.find_next_pending_task(plan)
             ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
             ioutils.save_current_task(userGoal, currentTask)
@@ -60,9 +60,11 @@ def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
     elif kindOption == 2: # Modify Task
         newDescription = cmd.prompt_user_input("Please input your new task description: ")
         cPlan, currentTask, message = tm.modify_task(cPlan, currentTask, newDescription)
+        ioutils.save_plan(userGoal, json.dumps(cPlan), "plan.json")
         return manage_task(userGoal, cPlan, currentTask)
     elif kindOption == 3: # Skip Task
         cPlan, currentTask, message = tm.skip_task(cPlan, currentTask)
+        ioutils.save_plan(userGoal, json.dumps(cPlan), "plan.json")
         if currentTask == {}:
             cmd.system_message("Congratulations! You have completed your goal!")
             os._exit(0)
