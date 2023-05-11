@@ -65,10 +65,8 @@ def find_and_update_task(tasks: List, task_id: str, updated_info: Dict) -> List:
             for key, value in updated_info.items():
                 task[key] = value
             return tasks
-        else:
-            # Go through each sub-task
-            if len(task['tasks']) > 0:
-                return find_and_update_task(task["tasks"], task_id, updated_info)
+        elif len(task['tasks']) > 0:
+            return find_and_update_task(task["tasks"], task_id, updated_info)
     return tasks
 
 def find_and_add_subtask(plan: List, parent_task_id: str, new_subtask: List):
@@ -76,10 +74,8 @@ def find_and_add_subtask(plan: List, parent_task_id: str, new_subtask: List):
         if task["id"] == parent_task_id:
             # Add new sub-task
             task["tasks"] = new_subtask
-        else:
-            # Go through each sub-task
-            if len(task['tasks']) > 0:
-                find_and_add_subtask(task["tasks"], parent_task_id, new_subtask)
+        elif len(task['tasks']) > 0:
+            find_and_add_subtask(task["tasks"], parent_task_id, new_subtask)
 
 def find_next_pending_task(plan: List[Dict]) -> Dict:
     for task in plan:
@@ -98,14 +94,11 @@ def update_parent_task_status(task):
         update_parent_task_status(subtask)
 
 def first_by_key_value(task_list: List, key:str, value: str) -> Dict:
-    result = {}
     for task in task_list:
         if task[key] == value:
-            result = task
-            return result
-        else:
-            if len(task['tasks']) > 0:
-                result = first_by_key_value(task['tasks'], key, value)
-                if result != {} and result[key] == value:
-                    return result
-    return result
+            return task
+        elif len(task['tasks']) > 0:
+            result = first_by_key_value(task['tasks'], key, value)
+            if result and result[key] == value:
+                return result
+    return {}
