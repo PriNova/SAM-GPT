@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open("requirements.txt", "r") as f:
     requirements = f.read().splitlines()
@@ -6,13 +6,7 @@ with open("requirements.txt", "r") as f:
 setup(
     name="samgpt",
     version="0.1",
-    packages=["samgpt", 
-              "samgpt.agents", 
-              "samgpt.nlp", 
-              "samgpt.planning",
-              "samgpt.tests",
-              "samgpt.ui", 
-              "samgpt.utils"],
+    packages=find_packages(),
     install_requires=requirements,
     entry_points={
         "console_scripts": [
