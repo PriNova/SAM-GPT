@@ -45,7 +45,6 @@ def main() -> None:
                 os._exit(0)
         if kindOption == 2: # Execute
             currentTask['status'] = "Completed"
-            #plan = tm.find_and_update_task(plan, currentTask['id'], {'status': currentTask['status']})
             currentTask = tm.find_next_pending_task(plan)
             ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
             ioutils.save_current_task(userGoal, currentTask)
@@ -75,11 +74,8 @@ def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
     return currentTask
 
 def decompose_task(cPlan: List, currentTask: Dict, response: str) -> List:
-    print(currentTask['id'])
     decompose = pg.extract_with_regex(response, '')
-    print(decompose)
     jsonFormattedDecomp: List = samgpt.utils.string_utils.format_subtask_as_json(decompose, currentTask['id'])
-    print(jsonFormattedDecomp)
     tm.find_and_add_subtask(cPlan, currentTask['id'], jsonFormattedDecomp)
     return cPlan
     

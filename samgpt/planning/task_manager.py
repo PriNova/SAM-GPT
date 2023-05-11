@@ -3,7 +3,6 @@ from typing import Tuple
 
 # track the tasks and the plan based on the users goal
 def get_task(plan: List, index: int) -> Dict:
-    #jsonPlan: Dict = json.loads(plan)
     if index < len(plan):
         return plan[index]
     return {}
@@ -46,20 +45,17 @@ def update_task_by_id(plan: List, task_id: str, updated_info: Dict):
 # Approves a task by setting the status to "In Progress" and updating the plan
 def approve_task(cPlan: List, currentTask: Dict) -> Tuple[List, Dict, str]:
     currentTask['status'] = "In Progress"
-    #find_and_update_task(cPlan, currentTask['id'], {'status': currentTask['status']})
     return cPlan, currentTask, "Task approved."
 
 # Modifies a task by updating the description and updating the plan
 def modify_task(cPlan: List, currentTask: Dict, newDescription: str) -> Tuple[List, Dict, str]:
     currentTask['description'] = newDescription
-    #find_and_update_task(cPlan, currentTask['id'], {'description': currentTask['description']})
     return cPlan, currentTask, "Task modified"
 
 # Skipping a task by setting the status to "Skipped", updating the plan and fetch the next task
 def skip_task(cPlan: List, currentTask: Dict) -> Tuple[List, Dict, str]:
     currentTask['status'] = "Skipped"
-    #find_and_update_task(cPlan, currentTask['id'], {'status': currentTask['status']})
-    newTask = traverse(cPlan, 'status', 'Pending')
+    newTask = find_next_pending_task(cPlan)
     return cPlan, newTask, "Task skipped."
 
 def find_and_update_task(tasks: List, task_id: str, updated_info: Dict) -> List:
@@ -86,13 +82,17 @@ def find_and_add_subtask(plan: List, parent_task_id: str, new_subtask: List):
                 find_and_add_subtask(task["tasks"], parent_task_id, new_subtask)
 
 def find_next_pending_task(plan: List) -> Dict:
+    result = {}
     for task in plan:
         if task['status'] == "Pending":
-            return task
+            result = task
+            return result
         else:
             if len(task['tasks']) > 0:
-                find_next_pending_task(task["tasks"])
-    return {}
+                result = find_next_pending_task(task["tasks"])
+                if result != {} and result['status'] == 'Pending':
+                    return result
+    return result
 
 def update_parent_task_status(task):
     if all(subtask["status"] == "completed" for subtask in task["tasks"]):
@@ -100,7 +100,7 @@ def update_parent_task_status(task):
     for subtask in task["tasks"]:
         update_parent_task_status(subtask)
 
-def traverse(task_list: List, key:str, value: str) -> Dict:
+def first_by_key_value(task_list: List, key:str, value: str) -> Dict:
     result = {}
     for task in task_list:
         if task[key] == value:
@@ -108,7 +108,7 @@ def traverse(task_list: List, key:str, value: str) -> Dict:
             return result
         else:
             if len(task['tasks']) > 0:
-                result = traverse(task['tasks'], key, value)
+                result = first_by_key_value(task['tasks'], key, value)
                 if result != {} and result[key] == value:
                     return result
     return result

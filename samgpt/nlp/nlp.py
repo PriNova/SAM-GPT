@@ -27,7 +27,7 @@ Model: Dict = {
     }
 
 # Get the model from the Model enu
-model: enumerate = Model['openai']
+model: enumerate = Model['free']
 
 # Get the chat completion from the model
 def get_chat_completion(model, messages: List[Dict[str, str]], config: Dict[str, str], apiKey: Optional[str] = None, customHeaders: Optional[Dict[str, str]] = None) -> str:
