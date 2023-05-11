@@ -12,7 +12,6 @@ import samgpt.utils.string_utils
 
 # The main entry point of the application
 def main() -> None:
-
     # Introducing
     cmd.system_message("Welcome to SAM-GPT!")
     userGoal: str = cmd.prompt_user_input("Please input your goal: ")
@@ -25,7 +24,7 @@ def main() -> None:
         cmd.system_message("Sorry, SAM-GPT cannot generate a plan for you.")
     cmd.ai_message(response)
     ioutils.save_plan(goal=userGoal, plan=json.dumps(plan), filename="plan.json")
-
+   
     # Task handling
     currentTask : Dict = tm.get_task(plan=plan, index=0)
     while True:
@@ -66,7 +65,7 @@ def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
         cPlan, currentTask, message = tm.skip_task(cPlan, currentTask)
         ioutils.save_plan(userGoal, json.dumps(cPlan), "plan.json")
         if currentTask == {}:
-            cmd.system_message("Congratulations! You have completed your goal!")
+            cmd.system_message("Congrats! You have completed your goal!")
             os._exit(0)
         return manage_task(userGoal, cPlan, currentTask)
     

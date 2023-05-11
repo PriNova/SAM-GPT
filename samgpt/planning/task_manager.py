@@ -59,7 +59,7 @@ def modify_task(cPlan: List, currentTask: Dict, newDescription: str) -> Tuple[Li
 def skip_task(cPlan: List, currentTask: Dict) -> Tuple[List, Dict, str]:
     currentTask['status'] = "Skipped"
     #find_and_update_task(cPlan, currentTask['id'], {'status': currentTask['status']})
-    newTask = find_next_pending_task(cPlan)
+    newTask = traverse(cPlan, 'status', 'Pending')
     return cPlan, newTask, "Task skipped."
 
 def find_and_update_task(tasks: List, task_id: str, updated_info: Dict) -> List:
@@ -71,7 +71,8 @@ def find_and_update_task(tasks: List, task_id: str, updated_info: Dict) -> List:
             return tasks
         else:
             # Go through each sub-task
-            return find_and_update_task(task["tasks"], task_id, updated_info)
+            if len(task['tasks']) > 0:
+                return find_and_update_task(task["tasks"], task_id, updated_info)
     return tasks
 
 def find_and_add_subtask(plan: List, parent_task_id: str, new_subtask: List):
@@ -81,15 +82,16 @@ def find_and_add_subtask(plan: List, parent_task_id: str, new_subtask: List):
             task["tasks"] = new_subtask
         else:
             # Go through each sub-task
-            find_and_add_subtask(task["tasks"], parent_task_id, new_subtask)
+            if len(task['tasks']) > 0:
+                find_and_add_subtask(task["tasks"], parent_task_id, new_subtask)
 
 def find_next_pending_task(plan: List) -> Dict:
     for task in plan:
         if task['status'] == "Pending":
             return task
         else:
-            for subtask in task["tasks"]:
-                return find_next_pending_task(task["tasks"])
+            if len(task['tasks']) > 0:
+                find_next_pending_task(task["tasks"])
     return {}
 
 def update_parent_task_status(task):
@@ -98,10 +100,15 @@ def update_parent_task_status(task):
     for subtask in task["tasks"]:
         update_parent_task_status(subtask)
 
-def traverse(task_list: List, key:str, value: str):
+def traverse(task_list: List, key:str, value: str) -> Dict:
+    result = {}
     for task in task_list:
         if task[key] == value:
-            return task
+            result = task
+            return result
         else:
             if len(task['tasks']) > 0:
-                return traverse(task['tasks'], key, value)
+                result = traverse(task['tasks'], key, value)
+                if result != {} and result[key] == value:
+                    return result
+    return result
