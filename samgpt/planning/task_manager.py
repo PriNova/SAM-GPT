@@ -81,18 +81,15 @@ def find_and_add_subtask(plan: List, parent_task_id: str, new_subtask: List):
             if len(task['tasks']) > 0:
                 find_and_add_subtask(task["tasks"], parent_task_id, new_subtask)
 
-def find_next_pending_task(plan: List) -> Dict:
-    result = {}
+def find_next_pending_task(plan: List[Dict]) -> Dict:
     for task in plan:
         if task['status'] == "Pending":
-            result = task
-            return result
-        else:
-            if len(task['tasks']) > 0:
-                result = find_next_pending_task(task["tasks"])
-                if result != {} and result['status'] == 'Pending':
-                    return result
-    return result
+            return task
+        elif len(task['tasks']) > 0:
+            result = find_next_pending_task(task["tasks"])
+            if result and result['status'] == 'Pending':
+                return result
+    return {}
 
 def update_parent_task_status(task):
     if all(subtask["status"] == "completed" for subtask in task["tasks"]):
