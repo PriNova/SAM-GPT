@@ -4,14 +4,19 @@ import samgpt.agents.task_delegator as td
 import samgpt.agents.plan_generator as pg
 import samgpt.utils.io_utils as ioutils
 
-from typing import List, Dict, Tuple
+from typing import List, Dict
 import json
 import os
 
 import samgpt.utils.string_utils
 
+from flask import Flask
+
+app = Flask(__name__)
+
 # The main entry point of the application
-def main() -> None:
+@app.route('/')
+def main():
     # Introducing
     cmd.system_message("Welcome to SAM-GPT!")
     userGoal: str = cmd.prompt_user_input("Please input your goal: ")
