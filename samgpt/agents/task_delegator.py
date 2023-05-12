@@ -39,11 +39,11 @@ $git: Git is a distributed version control system that allows developers to mana
 $llm: This command can be used to perform a wide range of natural language processing tasks, including text generation, translation, sentiment analysis, and question answering, among others.
 $newCommand: This command can be used to create a new command that is customized and tailored to fulfill specific tasks or goals. It allows for the creation of a unique command that can be used to perform a specific action or set of actions.
 
-Format the output as follows:
+Only reply in the following format:
 
 Command: $command_name
 Thoughts: (Thoughts why the selected command is the best fit to the task)
-Critics: (Constructive self-critics wether decomposeTask might be a better choice)
-Decomposition: (Decomposing the task in the most smallest, simplest and managable numbered task list sorted by priority. Append the appropriate command from the available command list)
+Critics: (Constructive self-critics wether the decomposeTask command might be a better choice)
+Decomposition: (Decomposing the task in the most smallest, simplest and managable numbered task list sorted by priority)
 """},
 {'role': 'user', 'content': 'Choose the best command based on the task and goal. Only provide the output in the format given'}]

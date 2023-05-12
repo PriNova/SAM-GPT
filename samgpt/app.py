@@ -10,12 +10,7 @@ import os
 
 import samgpt.utils.string_utils
 
-from flask import Flask
-
-app = Flask(__name__)
-
 # The main entry point of the application
-@app.route('/')
 def main():
     # Introducing
     cmd.system_message("Welcome to SAM-GPT!")
