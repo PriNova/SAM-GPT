@@ -3,6 +3,9 @@ import samgpt.planning.task_manager as tm
 import samgpt.agents.task_delegator as td
 import samgpt.agents.plan_generator as pg
 import samgpt.utils.io_utils as ioutils
+import samgpt.agents.task_executor as te
+
+
 
 from typing import List, Dict
 import json
@@ -44,6 +47,8 @@ def main():
                 cmd.system_message("Congratulations! You have completed your goal!")
                 os._exit(0)
         if kindOption == 2: # Execute
+            execution = te.execute_task(response)
+            cmd.ai_message(f"Here is my execution:\n{execution}")
             currentTask['status'] = "Completed"
             currentTask = tm.find_next_pending_task(plan)
             ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
