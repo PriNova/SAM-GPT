@@ -47,7 +47,7 @@ def main():
                 cmd.system_message("Congratulations! You have completed your goal!")
                 os._exit(0)
         if kindOption == 2: # Execute
-            execution = te.execute_task(response)
+            execution = te.execute_task(response, userGoal, currentTask['description'])
             cmd.ai_message(f"Here is my execution:\n{execution}")
             currentTask['status'] = "Completed"
             currentTask = tm.find_next_pending_task(plan)
