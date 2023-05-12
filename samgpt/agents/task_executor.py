@@ -14,10 +14,11 @@ def execute_task(response: str, userGoal: str, currentTaskDescription: str) -> N
             command = "No match"
     cmd.system_message(f"Command: {command}")
 
-    query = ""
+    result = ""
     match command:
         case "webSearch":
-            query = webSearchAgent.execute(userGoal, currentTaskDescription)
+            result = webSearchAgent.execute(userGoal, currentTaskDescription)
         case _:
-            query = "No query found!"
-    print(query)
+            result = "No match"
+        
+    print(f"Result: {result}")
