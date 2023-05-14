@@ -30,7 +30,7 @@ Model: Dict = {
 model: enumerate = Model['free']
 
 # Get the chat completion from the model
-def get_chat_completion(model, messages: List[Dict[str, str]], config: Dict[str, str], apiKey: Optional[str] = None, customHeaders: Optional[Dict[str, str]] = None) -> str:
+def get_chat_completion(model, messages: List[Dict[str, str]], config: Dict[str, str]) -> str:
     headers = {
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {model[1]}'
@@ -54,9 +54,9 @@ def get_chat_completion(model, messages: List[Dict[str, str]], config: Dict[str,
 
 # Start the inference
 def start__simple_inference(role, prompt) -> str:
-    response = get_chat_completion(model, messages=[{'role': role, 'content': prompt}], config=defaultChatConfig, apiKey='')
+    response = get_chat_completion(model, messages=[{'role': role, 'content': prompt}], config=defaultChatConfig)
     return response
 
 def start_multi_prompt_inference(message) -> str:
-    response = get_chat_completion(model, messages= message, config=defaultChatConfig, apiKey='')
+    response = get_chat_completion(model, messages= message, config=defaultChatConfig)
     return response
