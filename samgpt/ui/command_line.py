@@ -17,7 +17,7 @@ def prompt_user_input(prompt, style = Fore.BLUE) -> str:
 # Display AI output
 # input message to display and color style
 def ai_message(message, style = Fore.YELLOW) -> None:
-    print(f"{style}{Style.BRIGHT}{message}{Style.RESET_ALL}")
+    print(f"{style}{message}{Style.RESET_ALL}")
 
 # Display system message
 # input: message to display and color style

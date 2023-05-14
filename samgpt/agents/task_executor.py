@@ -1,6 +1,7 @@
 from typing import Dict
 import samgpt.agents.websearch_agent as webSearchAgent
 import samgpt.ui.command_line as cmd
+import samgpt.nlp.nlp as nlp
 
 def execute_task(response: str, userGoal: str, currentTaskDescription: str) -> None:
     command = ""
@@ -17,8 +18,7 @@ def execute_task(response: str, userGoal: str, currentTaskDescription: str) -> N
     result = ""
     match command:
         case "webSearch":
-            result = webSearchAgent.execute(userGoal, currentTaskDescription)
+            webSearchAgent.execute(userGoal, currentTaskDescription)
         case _:
             result = "No match"
         
-    print(f"Result: {result}")

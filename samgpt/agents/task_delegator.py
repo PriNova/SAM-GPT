@@ -8,7 +8,6 @@ import json
 def delegate_task(goal: str, plan: List, task: Dict):
     taskDescription = task['description']
     prompt = create_task_prompt(goal, plan, taskDescription)
-    print(prompt)
     response = nlp.start_multi_prompt_inference(prompt)
     return response
     
