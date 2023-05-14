@@ -87,6 +87,19 @@ def find_next_pending_task(plan: List[Dict]) -> Dict:
                 return result
     return {}
 
+# create a function to traverse a nested list in depth-first order
+# from every element in the list extract the 'ID' and description to generate a numbered list
+def extract_plan_tasks(plan: List[Dict]) -> str:
+    tasks = []
+    for task in plan:
+        extracted_text = task['id'] + ". " + task['description'] + "\n"
+        tasks.append(extracted_text)
+        if len(task['tasks']) > 0:
+            appendable_list = extract_plan_tasks(task["tasks"])
+            tasks.append(appendable_list)
+    return ''.join(tasks).strip()
+
+
 def update_parent_task_status(task):
     if all(subtask["status"] == "completed" for subtask in task["tasks"]):
         task["status"] = "completed"

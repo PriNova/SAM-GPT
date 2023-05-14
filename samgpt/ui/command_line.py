@@ -38,7 +38,8 @@ taskOptions = {
 
 decompOrExecute = {
     1: "Decompose Task",
-    2: "Execute Task"
+    2: "Execute Task",
+    3: "Retry"
 }
 
 # Ask user for options to input

@@ -1,7 +1,7 @@
 from samgpt.agents.task_executor import execute_task
 
 def test_executor():
-    response = """Command: $webSearch
+    response = """Command: webSearch
 
 Thoughts: The best command for this task would be $webSearch as it allows me to search the web for potential locations for the pet shop. I can look for areas with high foot traffic, proximity to other pet-related businesses, and areas with a high concentration of pet owners.
 
@@ -13,5 +13,5 @@ Decomposition:
 3. Evaluate the potential locations based on the criteria and narrow down the options.
 4. Visit the top locations in person to assess their suitability.
 5. Choose the best location and begin the process of opening the pet shop."""
-    assert execute_task(response) == "webSearch"
+    assert execute_task(response, userGoal="A goal", currentTaskDescription=" a descrit") == "webSearch"
     #assert False, "This test should fail"

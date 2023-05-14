@@ -33,7 +33,7 @@ def main():
     while True:
         currentTask = manage_task(userGoal, plan, currentTask)
         cmd.system_message("Hold on. SAM-GPT will delegate your task.")
-        response = td.delegate_task(userGoal, currentTask)
+        response = td.delegate_task(userGoal, plan, currentTask)
         cmd.ai_message(f"Here is my response:\n{response}")
 
         # Decomposing or Executing
@@ -53,6 +53,8 @@ def main():
             currentTask = tm.find_next_pending_task(plan)
             ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
             ioutils.save_current_task(userGoal, currentTask)
+        if kindOption == 3: # Retry
+            pass
 
 def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
     cmd.ai_message(f"\nYour current task is: {currentTask['description']} (Status: {currentTask['status']})\n")
