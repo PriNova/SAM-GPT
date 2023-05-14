@@ -29,7 +29,7 @@ def execute(userGoal: str, currentTaskDescription: str):
     cmd.system_message("SAM-GPT is collecting the response!")
     prompt = [{'role': 'assistant', 'content':  f"""Instructions:
 1. Find the information's in the Text based on the Query.
-2. If the Text contains the information for the query then reply with the exact answer.
+2. If the Text contains the information for the query then reply with the exact answer very briefly and concise.
 
 Search Query: {query}
 
@@ -38,8 +38,7 @@ Text:
 {contens}
 '''
 
-Format your output as:
-Answer: I found the answer to your query. The result is
+The result is:
 
 """}]
     response = start_multi_prompt_inference(prompt)
@@ -49,7 +48,7 @@ def make_web_request2(query: str):
     results = []
     try:
         from googlesearch import search
-        for j in search(query, tld="com", num=10, stop=5, pause=2):
+        for j in search(query, tld="com", num=5, stop=5, pause=2):
             results.append(j)
     except ImportError:
         print("No module named 'google' found")
@@ -81,7 +80,7 @@ def scrape_content(results: List)-> List:
                     if not char.isspace() or char == ' ':
                         page_content += char
                         char_count += 1
-                        # stop once we reach 1000 characters
+                        # stop once we reach 2000 characters
                         if char_count == 2000:
                             break
                 if char_count == 2000:
@@ -105,6 +104,7 @@ def make_web_request(query: str):
     web_pages = search_results.get("webPages", {})
     search_results = web_pages.get("value", [])
 
+    """
     # Create a list of search result dictionaries with 'title', 'href', and 'body' keys
     search_results_list = [
         {
@@ -114,7 +114,10 @@ def make_web_request(query: str):
         }
         for item in search_results
     ]
-    return search_results_list
+    """
+    search_results_list = [item["url"] for item in search_results]
+    result = scrape_content(search_results_list)
+    return  result
 
 def clean_text(text: str) -> str:
     cleaned_text = re.sub("<[^>]*>", "", text)  # Remove HTML tags
@@ -124,20 +127,10 @@ def clean_text(text: str) -> str:
     return cleaned_text
 
 def create_search_prompt(userGoal: str, currentTaskDescription: str) -> List:
-    prompt = [{'role': 'assistant', 'content': f"""You are WebQueryGPT, a query generation engine, which helps to define the best search query with all relevant keywords to find the most accurate and efficiently search results from a google search.
+    prompt = [{'role': 'user', 'content': f"""I want "{userGoal}" Now I'm stuck with "{currentTaskDescription}" This task can only be done by me with a web search. I don't know how to ask. I need a query string to find the best answer.
 
-Instructions:
+Please provide me only the query string to input into a search engine. Use the following format:
+Query: (The query string to use in a search engine in a natural language style. Format the query string as a question.)
 
-1. Determine one perfect search query based on the goal and the task description delimited by triple backticks for a google search.
-
-```
-Goal: {userGoal}
-Task: {currentTaskDescription}
-```
-
-Do not explain or start a conversation. Give a natural language search query. Reply only with the perfect search query as follows:
-
-Query: (natural language search query)
-"""},
-{'role': 'user', 'content': 'Reply with the perfect fit search query for a google search. Only provide the output in the format given'}]
+Now it's your turn."""}]
     return prompt

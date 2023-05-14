@@ -15,19 +15,11 @@ def delegate_task(goal: str, plan: List, task: Dict):
 
 def create_task_prompt(goal: str, plan: List, taskDescription: str):
     flattened_plan = extract_plan_tasks(plan)
-    return [{'role': 'system', 'content': f"""As TaskMasterGPT, your goal is to choose the most suitable command based on the given task. Focus on your strengths as an LLM and avoid legal complexities. Provide concise and direct answers without describing your actions. Follow the given output format.
-
---- Instructions:
-1. Read the task.
-2. Evaluate the best command to execute the task based on the goal and the task.
-3. Let's work this out in a step by step way to be sure we have the right answer.
-
-Goal: {goal}
-Plan:
+    return [{'role': 'user', 'content': f"""I want "{goal}" I have the following plan:
 {flattened_plan}
-Task: {taskDescription}
 
---- Commands:
+Now I'm stuck with "{taskDescription}" This task can only be done by me with the following commands:
+
 $webSearch: Search the web for any query or topic if you are unsure.
 $createCode: Write programs in various programming languages for website creation, calculations, math tasks, applications, etc.
 $editCode: Modify an existing codebase by opening and editing the source files.
@@ -42,10 +34,11 @@ $llm: Perform natural language processing tasks like text generation, translatio
 $newCommand: Create a new customized command for specific tasks or goals if the availabe commands are not sufficient.
 $humanFeedback: Ask for human feedback or input if the task is unclear, ambiguous or too vague.
 
-Reply only in the following format:
-
-Command: (A command)
-Thoughts: (Reason why the selected command is the best fit for the task)
+Please advice me, which command to use and why. Use the following formatting for your answer:
+"
+Command: (The command to use)
+Thoughts:  (Reason why the selected command is the best fit for the task)
 Critics: (Constructive self-critics regarding whether the decomposeTask command might be a better choice)
-Decomposition: (Decompose the task into prioritized, manageable subtasks. Make sure that the tasks do not overlap with the plan.)
-"""}]
+Decomposition: (Decompose this task into prioritized, manageable and numbered subtasks. And please make sure that the subtasks are not already in the plan I mentioned above)"
+
+Now it's your turn."""}]

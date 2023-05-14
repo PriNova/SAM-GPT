@@ -38,7 +38,7 @@ def main():
 
         # Decomposing or Executing
         kindOption: int = cmd.ask_options(cmd.decompOrExecute)
-        if kindOption == 1: # Decompose
+        if kindOption == 2: # Decompose
             cmd.system_message("Hold on. SAM-GPT will decompose your task.")
             plan = decompose_task(plan, currentTask, response)
             currentTask = tm.find_next_pending_task(plan)
@@ -46,9 +46,9 @@ def main():
             if currentTask == {}:
                 cmd.system_message("Congratulations! You have completed your goal!")
                 os._exit(0)
-        if kindOption == 2: # Execute
+        if kindOption == 1: # Execute
             execution = te.execute_task(response, userGoal, currentTask['description'])
-            cmd.ai_message(f"Here is my execution:\n{execution}")
+            # cmd.ai_message(f"Here is my execution:\n{execution}")
             currentTask['status'] = "Completed"
             currentTask = tm.find_next_pending_task(plan)
             ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")

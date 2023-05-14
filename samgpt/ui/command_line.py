@@ -37,8 +37,8 @@ taskOptions = {
 }
 
 decompOrExecute = {
-    1: "Decompose Task",
-    2: "Execute Task",
+    1: "Execute Task",
+    2: "Decompose Task",
     3: "Retry"
 }
 

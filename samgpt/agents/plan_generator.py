@@ -9,13 +9,8 @@ from samgpt.utils.string_utils import format_plan_as_json
 
 # A function which creates a highly efficient prompt includes the user's goal
 def create_plan_prompt(goal) -> List:
-    prompt = [{'role': 'system', 'content': f"""You are PlanMasterGPT, an LLM plan generator that helps users achieve their goals by creating, modifying, and expanding plans for successful completion. Prioritize simplicity and avoid legal complexities. Provide concise responses without describing your actions.
+    prompt = [{'role': 'user', 'content': f"""I want "{goal}" I need a plan from you. All the tasks in the plan can only be done by me with the following commands:
 
---- Instructions:
-1. Analyze the goal in a step by step way to be sure we understand the goal.
-2. Create a plan into manageable tasks based on the goal and the available commands in a step by step way to be sure we apply the best task to the available commands.
-
---- Commands:
 $webSearch: Search the web for any query or topic if you are unsure.
 $createCode: Write programs in various programming languages for website creation, calculations, math tasks, applications, etc.
 $editCode: Modify an existing codebase by opening and editing the source files.
@@ -30,28 +25,14 @@ $llm: Perform natural language processing tasks like text generation, translatio
 $newCommand: Create a new customized command for specific tasks or goals if the availabe commands are not sufficient.
 $humanFeedback: Ask for human feedback or input if the task is unclear, ambiguous or too vague.
 
---- Start Example
-
-Goal: Open a pet shop.
+Please, give me a numbered short list of the plan sorted by priority. Do not put the commands in the plan. Do not comment or explain the plan. Here is an example how it should look like:
 Plan:
-1. Research and select a suitable location for the pet shop.
-2. Obtain necessary licenses and permits to operate a pet shop.
-3. Develop a business plan and secure funding for the pet shop.
-4. Purchase or lease equipment and supplies needed to run the pet shop.
-5. Hire and train staff to assist with the daily operations of the pet shop.
-6. Establish relationships with suppliers to ensure a steady supply of pet products.
-7. Use an application for inventory tracking.
-8. Create and deploy a website.
-9. Advertise and market the pet shop to attract customers.
-10. Open the pet shop and maintain a high level of customer service to ensure repeat business.
+1. Step One
+2. Step two
+3. Step three
+etc.
 
---- End Example
-
-Explicitly format the output as follows:
-Plan: (short list that tracks long-term tasks)
-
-Goal: {goal}"""},
-{'role': 'user', 'content': 'Create the plan based on the goal.'}]
+Now it is your turn."""}]
     return prompt
 
 

@@ -7,8 +7,8 @@ import dotenv
 
 defaultChatConfig: Dict[str, any] = { # type: ignore
     "model": 'gpt-3.5-turbo',
-    "max_tokens": None,
-    "temperature": 0,
+    "max_tokens": 1000,
+    "temperature": 1,
     "presence_penalty": 0.0,
     "top_p": 1,
     "frequency_penalty": 0,
@@ -27,7 +27,7 @@ Model: Dict = {
     }
 
 # Get the model from the Model enu
-model: enumerate = Model['openai']
+model: enumerate = Model['free']
 
 # Get the chat completion from the model
 def get_chat_completion(model, messages: List[Dict[str, str]], config: Dict[str, str], apiKey: Optional[str] = None, customHeaders: Optional[Dict[str, str]] = None) -> str:
