@@ -22,10 +22,10 @@ def main():
 
     # Plan generation
     cmd.system_message(f"Hold on. SAM-GPT will generate the plan for you.")
-    response, plan = pg.generate_plan(userGoal)
+    response, plan = pg.generate_plan(userGoal, cmd.ai_message)
     if response == "":
         cmd.system_message("Sorry, SAM-GPT cannot generate a plan for you.")
-    cmd.ai_message(response)
+    # cmd.ai_message(response)
     ioutils.save_plan(goal=userGoal, plan=json.dumps(plan), filename="plan.json")
    
     # Task handling
@@ -33,8 +33,10 @@ def main():
     while True:
         currentTask = manage_task(userGoal, plan, currentTask)
         cmd.system_message("Hold on. SAM-GPT will delegate your task.")
-        response = td.delegate_task(userGoal, plan, currentTask)
+        cmd.system_message("\n")
         cmd.ai_message(f"Here is my response:\n{response}")
+        response = td.delegate_task(userGoal, plan, currentTask, cmd.ai_message)
+        
 
         # Decomposing or Executing
         kindOption: int = cmd.ask_options(cmd.decompOrExecute)
@@ -47,7 +49,7 @@ def main():
                 cmd.system_message("Congratulations! You have completed your goal!")
                 os._exit(0)
         if kindOption == 1: # Execute
-            execution = te.execute_task(response, userGoal, currentTask['description'])
+            execution = te.execute_task(response, userGoal, currentTask['description'], cmd.ai_message)
             # cmd.ai_message(f"Here is my execution:\n{execution}")
             currentTask['status'] = "Completed"
             currentTask = tm.find_next_pending_task(plan)

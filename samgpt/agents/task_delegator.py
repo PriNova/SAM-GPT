@@ -5,10 +5,10 @@ import samgpt.ui.command_line as cmd
 import json
 
 # Delegation of tasks to task executors
-def delegate_task(goal: str, plan: List, task: Dict):
+def delegate_task(goal: str, plan: List, task: Dict, callback):
     taskDescription = task['description']
     prompt = create_task_prompt(goal, plan, taskDescription)
-    response = nlp.start_multi_prompt_inference(prompt)
+    response = nlp.start_multi_prompt_inference(prompt, callback)
     return response
     
 

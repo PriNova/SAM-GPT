@@ -10,10 +10,10 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-def execute(userGoal: str, currentTaskDescription: str):
+def execute(userGoal: str, currentTaskDescription: str, callback):
     cmd.ai_message(f"Determine web search query for task: {currentTaskDescription}")
     prompt = create_search_prompt(userGoal, currentTaskDescription)
-    response = start_multi_prompt_inference(prompt)
+    response = start_multi_prompt_inference(prompt, callback)
     
     query = ""
     match response.split():
@@ -41,7 +41,7 @@ Text:
 The result is:
 
 """}]
-    response = start_multi_prompt_inference(prompt)
+    response = start_multi_prompt_inference(prompt, callback)
     cmd.ai_message(f"{response}")
 
 def make_web_request2(query: str):

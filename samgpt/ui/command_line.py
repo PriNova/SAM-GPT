@@ -1,6 +1,7 @@
 # ui/command_line.py
 
 from colorama import init, Fore, Style
+import time
 
 init(autoreset=True)  # Automatically reset colors after each print
 
@@ -17,7 +18,8 @@ def prompt_user_input(prompt, style = Fore.BLUE) -> str:
 # Display AI output
 # input message to display and color style
 def ai_message(message, style = Fore.YELLOW) -> None:
-    print(f"{style}{message}{Style.RESET_ALL}")
+    print(f"{style}{message}{Style.RESET_ALL}", end='')
+    time.sleep(0.05)
 
 # Display system message
 # input: message to display and color style

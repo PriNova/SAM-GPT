@@ -36,9 +36,9 @@ Now it is your turn."""}]
     return prompt
 
 
-def generate_plan(goal) -> Tuple[str, List]:
+def generate_plan(goal, callback) -> Tuple[str, List]:
     planPrompt = create_plan_prompt(goal)
-    response: str = nlp.start_multi_prompt_inference(message=planPrompt)
+    response: str = nlp.start_multi_prompt_inference(message=planPrompt, callback=callback)
     extractedPlan: str = extract_with_regex(response, "Plan:")
     jsonFormattedPlan: List = format_plan_as_json(extractedPlan)
 
