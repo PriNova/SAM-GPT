@@ -33,11 +33,9 @@ def main():
     while True:
         currentTask = manage_task(userGoal, plan, currentTask)
         cmd.system_message("Hold on. SAM-GPT will delegate your task.")
-        cmd.system_message("\n")
-        cmd.ai_message(f"Here is my response:\n{response}")
+        cmd.ai_message(f"Here is my response:\n")
         response = td.delegate_task(userGoal, plan, currentTask, cmd.ai_message)
-        
-
+        cmd.system_message('')
         # Decomposing or Executing
         kindOption: int = cmd.ask_options(cmd.decompOrExecute)
         if kindOption == 2: # Decompose

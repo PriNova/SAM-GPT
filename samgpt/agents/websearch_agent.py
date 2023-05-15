@@ -11,10 +11,10 @@ import re
 from bs4 import BeautifulSoup
 
 def execute(userGoal: str, currentTaskDescription: str, callback):
-    cmd.ai_message(f"Determine web search query for task: {currentTaskDescription}")
+    cmd.ai_message(f"Determine web search query for task: {currentTaskDescription}\n")
     prompt = create_search_prompt(userGoal, currentTaskDescription)
     response = start_multi_prompt_inference(prompt, callback)
-    
+    cmd.system_message('')
     query = ""
     match response.split():
         case ["Query:", *_]:
