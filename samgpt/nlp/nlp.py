@@ -1,11 +1,11 @@
 """This module contains the functions used to interact with the NLP model"""
 
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 import requests
 import json
 import dotenv
 
-defaultChatConfig: Dict[str, any] = { # type: ignore
+defaultChatConfig: Dict[str, Any] = { # type: ignore
     "model": 'gpt-3.5-turbo',
     "max_tokens": 1000,
     "temperature": 1,
@@ -15,62 +15,74 @@ defaultChatConfig: Dict[str, any] = { # type: ignore
     "stream": True
 }
 
-OPENAI_API_KEY : str|None = dotenv.get_key('.env', 'OPENAI_API_KEY')
+OPENAI_API_KEY : Optional[str] = dotenv.get_key('.env', 'OPENAI_API_KEY')
 
-openaiModel: list = ['https://api.openai.com/v1/chat/completions', OPENAI_API_KEY]
-freeModel: list = ['https://free.churchless.tech/v1/chat/completions', '']
+openaiModel: List[Any] = ['https://api.openai.com/v1/chat/completions', OPENAI_API_KEY]
+freeModel: List[Any] = ['https://free.churchless.tech/v1/chat/completions', '']
 
 # define the Model enum
-Model: Dict = {
+Model: Dict[str, List[Any]] = {
     'openai': openaiModel,
     'free': freeModel
     }
 
 # Get the model from the Model enu
-model: enumerate = Model['free']
+model: List[Any] = Model['free']
 
 # Get the chat completion from the model
-def get_chat_completion(model, messages: List[Dict[str, str]], config: Dict[str, str], callback) -> str:
-    headers = {
+import requests
+import json
+from typing import List, Dict, Any, Callable
+
+def get_chat_completion(model: List[Any], messages: List[Dict[str, str]], config: Dict[str, Any], callback: Callable[[str], None]) -> str:
+    headers = get_headers(model[1])
+    body = get_body(messages, config)
+
+    with requests.Session() as session:
+        response = send_request(session, model[0], headers, body)
+        response.raise_for_status()
+
+        text = ""
+        for line in response.iter_lines(chunk_size=1, decode_unicode=True):
+            if line.startswith('data: '):
+                data = json.loads(line[6:])
+                content = get_content(data)
+                text += content
+                callback(content)
+                if is_stream_ended(data):
+                    break
+
+    return text
+
+def get_headers(token: str) -> Dict[str, str]:
+    return {
         'Content-Type': 'application/json',
-        'Authorization': f'Bearer {model[1]}'
+        'Authorization': f'Bearer {token}'
     }
 
-    body = {
+def get_body(messages: List[Dict[str, str]], config: Dict[str, Any]) -> Dict[str, Any]:
+    return {
         'messages': messages,
         **config
     }
 
-    response = requests.post(model[0], headers=headers, data=json.dumps(body))
+def send_request(session: requests.Session, url: str, headers: Dict[str, str], body: Dict[str, Any]) -> requests.Response:
     repeat = 5
-    while response.status_code != 200 and repeat > 0:
-        response = requests.post(model[0], headers=headers, data=json.dumps(body))
+    while repeat > 0:
+        try:
+            response = session.post(url, headers=headers, data=json.dumps(body))
+            if response.status_code == 200:
+                return response
+        except requests.exceptions.RequestException:
+            pass
         repeat -= 1
-        
-    buffer = ""
-    text = ""
-    for chunk in response.iter_content(chunk_size=1, decode_unicode=True):
-        buffer += chunk
-        while '\n' in buffer:
-            line, buffer = buffer.split('\n', 1)
-            if line.startswith('data: '):
-                line = line[6:] # strip "data: " from the start of the line
-            try:
-                data = json.loads(line)
-            except json.JSONDecodeError:
-                continue  # skip this line if it's not valid JSON
-            content = data['choices'][0]['delta'].get('content', '')
-            text += content
-            callback(content)
-            finish_reason = data['choices'][0]['finish_reason']
-            if finish_reason is not None:
-                #print(f"\nStream ended due to: {finish_reason}")
-                break
-    return text
-    #response.raise_for_status()
-    data = response.json()
-    #To start content_without_first_linebreaks = content[2:]
-    return data['choices'][0]['message']['content'].encode('utf-8').decode('utf-8')
+    return requests.Response()
+
+def get_content(data: Dict[str, Any]) -> str:
+    return data['choices'][0]['delta'].get('content', '')
+
+def is_stream_ended(data: Dict[str, Any]) -> bool:
+    return data['choices'][0]['finish_reason'] is not None
 
 # Start the inference
 def start__simple_inference(role, prompt, callback) -> str:
