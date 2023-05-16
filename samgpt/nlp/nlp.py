@@ -38,19 +38,19 @@ def get_chat_completion(model: List[Any], messages: List[Dict[str, str]], config
     headers = get_headers(model[1])
     body = get_body(messages, config)
 
-    with requests.Session() as session:
-        response = send_request(session, model[0], headers, body)
-        response.raise_for_status()
+    
+    response = send_request(model[0], headers, body)
+    #response.raise_for_status()
 
-        text = ""
-        for line in response.iter_lines(chunk_size=1, decode_unicode=True):
-            if line.startswith('data: '):
-                data = json.loads(line[6:])
-                content = get_content(data)
-                text += content
-                callback(content)
-                if is_stream_ended(data):
-                    break
+    text = ""
+    for line in response.iter_lines(chunk_size=1, decode_unicode=True):
+        if line.startswith('data: '):
+            data = json.loads(line[6:])
+            content = get_content(data)
+            text += content
+            callback(content)
+            if is_stream_ended(data):
+                break
 
     return text
 
@@ -66,11 +66,11 @@ def get_body(messages: List[Dict[str, str]], config: Dict[str, Any]) -> Dict[str
         **config
     }
 
-def send_request(session: requests.Session, url: str, headers: Dict[str, str], body: Dict[str, Any]) -> requests.Response:
+def send_request(url: str, headers: Dict[str, str], body: Dict[str, Any]) -> requests.Response:
     repeat = 5
     while repeat > 0:
         try:
-            response = session.post(url, headers=headers, data=json.dumps(body))
+            response = requests.post(url, headers=headers, data=json.dumps(body))
             if response.status_code == 200:
                 return response
         except requests.exceptions.RequestException:

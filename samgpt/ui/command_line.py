@@ -19,7 +19,7 @@ def prompt_user_input(prompt, style = Fore.BLUE) -> str:
 # input message to display and color style
 def ai_message(message, style = Fore.YELLOW) -> None:
     print(f"{style}{message}{Style.RESET_ALL}", end='')
-    time.sleep(0.05)
+    time.sleep(0.01)
 
 # Display system message
 # input: message to display and color style

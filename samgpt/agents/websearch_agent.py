@@ -4,11 +4,29 @@ from samgpt.nlp.nlp import start_multi_prompt_inference
 
 
 
-from typing import List
+from typing import List, Generator
 import dotenv
 import requests
 import re
 from bs4 import BeautifulSoup
+
+CHAR_LIMIT = 2000
+
+def create_prompt(query: str, contents: str)-> List:
+    return [{'role': 'assistant', 'content':  f"""Instructions:
+1. Find the information's in the Text based on the Query.
+2. If the Text contains the information for the query then reply with the exact answer very briefly and concise.
+
+Search Query: {query}
+
+Text:
+'''
+{contents}
+'''
+
+The result is:
+
+"""}]
 
 def execute(userGoal: str, currentTaskDescription: str, callback):
     cmd.ai_message(f"Determine web search query for task: {currentTaskDescription}\n")
@@ -22,27 +40,13 @@ def execute(userGoal: str, currentTaskDescription: str, callback):
         case _:
             query = ""
 
-    cmd.ai_message(f"Query{query}")
-    contens = ""
+    content = ""
     if query:
-        contens = make_web_request2(query)
+        content = make_web_request2(query)
+    cmd.system_message('')
     cmd.system_message("SAM-GPT is collecting the response!")
-    prompt = [{'role': 'assistant', 'content':  f"""Instructions:
-1. Find the information's in the Text based on the Query.
-2. If the Text contains the information for the query then reply with the exact answer very briefly and concise.
-
-Search Query: {query}
-
-Text:
-'''
-{contens}
-'''
-
-The result is:
-
-"""}]
+    prompt = create_prompt(query, content)
     response = start_multi_prompt_inference(prompt, callback)
-    cmd.ai_message(f"{response}")
 
 def make_web_request2(query: str):
     results = []
@@ -72,24 +76,16 @@ def scrape_content(results: List)-> List:
             paragraphs = soup.find_all('p')
             
             # extract the text from each <p> tag and add it to a new list
-            page_content = ""
-            char_count = 0
-            for p in paragraphs:
-                for char in p.text:
-                    # consider spaces as visible characters
-                    if not char.isspace() or char == ' ':
-                        page_content += char
-                        char_count += 1
-                        # stop once we reach 2000 characters
-                        if char_count == 2000:
-                            break
-                if char_count == 2000:
-                    break
-            page_content += "\n"
-
-            # add the list of paragraphs to the contents list
-            contents.append(page_content)
+            extracted_content = extract_text_from_paragraphs(paragraphs, CHAR_LIMIT)
+            print(extracted_content)
+            contents += extracted_content
     return contents
+
+def extract_text_from_paragraphs(paragraphs, char_limit):
+    page_content = ""
+    for p in paragraphs:
+        page_content += ''.join(char for char in p.text if not char.isspace() or char == ' ')
+    return page_content[:char_limit] + '\n'
 
 def make_web_request(query: str):
     bing_api = dotenv.get_key(".env", "BING_API")
@@ -104,17 +100,6 @@ def make_web_request(query: str):
     web_pages = search_results.get("webPages", {})
     search_results = web_pages.get("value", [])
 
-    """
-    # Create a list of search result dictionaries with 'title', 'href', and 'body' keys
-    search_results_list = [
-        {
-            "title": clean_text(item["name"]),
-            "href": item["url"],
-            "body": clean_text(item["snippet"]),
-        }
-        for item in search_results
-    ]
-    """
     search_results_list = [item["url"] for item in search_results]
     result = scrape_content(search_results_list)
     return  result
