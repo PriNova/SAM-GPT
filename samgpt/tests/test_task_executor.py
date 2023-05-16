@@ -1,4 +1,5 @@
 from samgpt.agents.task_executor import execute_task
+from samgpt.ui.command_line import ai_message
 
 def test_executor():
     response = """Command: webSearch
@@ -13,5 +14,5 @@ Decomposition:
 3. Evaluate the potential locations based on the criteria and narrow down the options.
 4. Visit the top locations in person to assess their suitability.
 5. Choose the best location and begin the process of opening the pet shop."""
-    assert execute_task(response, userGoal="A goal", currentTaskDescription=" a descrit") == "webSearch"
+    assert execute_task(response, userGoal="A goal", currentTaskDescription="Find the best location for a pet shop", callback=ai_message) == "webSearch"
     #assert False, "This test should fail"

@@ -10,17 +10,15 @@ def create_folder(folder: str) -> None:
 # Function to save the plan to a file in a specified folder. If file already exists, it will be overwritten.
 def save_plan(goal: str, plan: str, filename: str) -> None:
     path = get_working_dir(goal)
-    if not os.path.exists(path):
-        create_folder(path)
-    with open(os.path.join(path, '')+filename, "w") as f:
+    os.makedirs(path, exist_ok=True)
+    with open(path + '/' + filename, "w") as f:
         f.write(plan)
 
 # safe current task into file
 def save_current_task(goal: str, jsonTask: Dict) -> None:
     path = get_working_dir(goal)
-    task = json.dumps(jsonTask)
-    with open(os.path.join(path, '')+f"task.json", "w") as f:
-        f.write(task)
+    with open(os.path.join(path, "task.json"), "w") as f:
+        json.dump(jsonTask, f)
 
 def get_working_dir(goal: str) -> str:
     strippedGoal = goal.strip().replace(" ", "_")[:20].lower()
