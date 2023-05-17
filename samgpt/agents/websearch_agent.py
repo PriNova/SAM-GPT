@@ -10,10 +10,10 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-CHAR_LIMIT = 2000
+CHAR_LIMIT = 6000
 
-def create_prompt(query: str, contents: str)-> List:
-    return [{'role': 'assistant', 'content':  f"""Instructions:
+def create_answer_prompt(query: str, contents: str)-> List:
+    return [{'role': 'user', 'content':  f"""Instructions:
 1. Find the information's in the Text based on the Query.
 2. If the Text contains the information for the query then reply with the exact answer very briefly and concise.
 
@@ -28,7 +28,19 @@ The result is:
 
 """}]
 
-def execute(userGoal: str, currentTaskDescription: str, callback):
+def create_summarize_prompt(query: str, contents: str)-> List:
+    return [{'role': 'user', 'content':  f"""Query: "{query}"
+    Text:
+    '''
+    {contents}
+    '''
+
+    Please distill the informations to my query based on the resulting text and reply briefly and concisely.
+    The result is:
+    """}]
+
+
+def execute(userGoal: str, currentTaskDescription: str, callback)-> str:
     cmd.ai_message(f"Determine web search query for task: {currentTaskDescription}\n")
     prompt = create_search_prompt(userGoal, currentTaskDescription)
     response = start_multi_prompt_inference(prompt, callback)
@@ -40,27 +52,46 @@ def execute(userGoal: str, currentTaskDescription: str, callback):
         case _:
             query = ""
 
-    content = make_web_request2(query) if query else ""
+    contents = make_web_request2(query) if query else []
+    #print(contents)
     cmd.system_message('')
-    cmd.system_message("SAM-GPT is collecting the response!")
-    prompt = create_prompt(query, content)
-    response = start_multi_prompt_inference(prompt, callback)
+    cmd.system_message("SAM-GPT is collecting the responses of the web scraping!")
 
-def make_web_request2(query: str):
+    cmd.system_message('')
+    # summarize every scraped content from the contents list and create the final answer
+    final_answer = ""
+    if contents:
+        result = []
+        for content in contents:
+            if content:
+                summarize_prompt = create_summarize_prompt(query, content)
+                summarize = start_multi_prompt_inference(summarize_prompt, callback)
+                cmd.system_message('')
+                result += summarize
+        if result:
+            summary = '\n'.join(result).strip()
+            prompt = create_answer_prompt(query, summary)
+            cmd.ai_message("\n The final answer: \n")
+            final_answer = start_multi_prompt_inference(prompt, callback)
+        else:
+            final_answer = "Sorry, I couldn't find any information for the query!"
+    else:
+        final_answer = "Sorry, I couldn't find any information for the query!"
+    return final_answer
+        
+
+def make_web_request2(query: str) -> List[str]:
     results = []
     try:
         from googlesearch import search
-        results.extend(iter(search(query, tld="com", num=5, stop=5, pause=2)))
+        results.extend(iter(search(query, tld="com", num=5, stop=5, pause=1)))
     except ImportError:
         print("No module named 'google' found")
     #print(results)
-    if results:
-        contents = scrape_content(results)
-        return ' '.join(contents).strip()
-    return ""
+    return scrape_content(results) if results else []
 
-def scrape_content(results: List)-> List:
-    contents = []
+def scrape_content(results: List)-> List[str]:
+    contents: List[str] = []
     for url in results:
         #try:
             response = requests.get(url)
@@ -72,16 +103,14 @@ def scrape_content(results: List)-> List:
             paragraphs = soup.find_all('p')
             
             # extract the text from each <p> tag and add it to a new list
-            extracted_content = extract_text_from_paragraphs(paragraphs, CHAR_LIMIT)
-            print(extracted_content)
-            contents += extracted_content
+            extracted_content: str = extract_text_from_paragraphs(paragraphs, CHAR_LIMIT)
+            contents.append(extracted_content)
     return contents
 
 def extract_text_from_paragraphs(paragraphs, char_limit):
-    page_content = "".join(
-        ''.join(char for char in p.text if not char.isspace() or char == ' ')
-        for p in paragraphs
-    )
+    page_content = ""
+    for p in paragraphs:
+        page_content += ''.join(char for char in p.text if not char.isspace() or char == ' ')
     return page_content[:char_limit] + '\n'
 
 def make_web_request(query: str):

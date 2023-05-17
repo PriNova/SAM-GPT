@@ -3,7 +3,7 @@ import samgpt.agents.websearch_agent as webSearchAgent
 import samgpt.ui.command_line as cmd
 import samgpt.nlp.nlp as nlp
 
-def execute_task(response: str, userGoal: str, currentTaskDescription: str, callback) -> None:
+def execute_task(response: str, userGoal: str, currentTaskDescription: str, callback) -> str:
     command = ""
     match response.split():
         case ["Command:", *object]:
@@ -15,7 +15,8 @@ def execute_task(response: str, userGoal: str, currentTaskDescription: str, call
     result = ""
     match command:
         case "webSearch":
-            webSearchAgent.execute(userGoal, currentTaskDescription, callback)
+            result =webSearchAgent.execute(userGoal, currentTaskDescription, callback)
         case _:
             result = "No match"
+    return result
         

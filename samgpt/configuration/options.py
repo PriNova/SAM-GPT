@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 # Dictionary of options to display
 taskOptions = {
     1: "Approve Task",
