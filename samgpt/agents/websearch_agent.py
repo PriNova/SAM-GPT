@@ -40,9 +40,7 @@ def execute(userGoal: str, currentTaskDescription: str, callback):
         case _:
             query = ""
 
-    content = ""
-    if query:
-        content = make_web_request2(query)
+    content = make_web_request2(query) if query else ""
     cmd.system_message('')
     cmd.system_message("SAM-GPT is collecting the response!")
     prompt = create_prompt(query, content)
@@ -52,15 +50,13 @@ def make_web_request2(query: str):
     results = []
     try:
         from googlesearch import search
-        for j in search(query, tld="com", num=5, stop=5, pause=2):
-            results.append(j)
+        results.extend(iter(search(query, tld="com", num=5, stop=5, pause=2)))
     except ImportError:
         print("No module named 'google' found")
     #print(results)
     if results:
         contents = scrape_content(results)
-        contents_flattened = ' '.join(contents).strip()
-        return contents_flattened
+        return ' '.join(contents).strip()
     return ""
 
 def scrape_content(results: List)-> List:
@@ -82,9 +78,10 @@ def scrape_content(results: List)-> List:
     return contents
 
 def extract_text_from_paragraphs(paragraphs, char_limit):
-    page_content = ""
-    for p in paragraphs:
-        page_content += ''.join(char for char in p.text if not char.isspace() or char == ' ')
+    page_content = "".join(
+        ''.join(char for char in p.text if not char.isspace() or char == ' ')
+        for p in paragraphs
+    )
     return page_content[:char_limit] + '\n'
 
 def make_web_request(query: str):
@@ -101,8 +98,7 @@ def make_web_request(query: str):
     search_results = web_pages.get("value", [])
 
     search_results_list = [item["url"] for item in search_results]
-    result = scrape_content(search_results_list)
-    return  result
+    return scrape_content(search_results_list)
 
 def clean_text(text: str) -> str:
     cleaned_text = re.sub("<[^>]*>", "", text)  # Remove HTML tags
@@ -112,10 +108,14 @@ def clean_text(text: str) -> str:
     return cleaned_text
 
 def create_search_prompt(userGoal: str, currentTaskDescription: str) -> List:
-    prompt = [{'role': 'user', 'content': f"""I want "{userGoal}" Now I'm stuck with "{currentTaskDescription}" This task can only be done by me with a web search. I don't know how to ask. I need a query string to find the best answer.
+    return [
+        {
+            'role': 'user',
+            'content': f"""I want "{userGoal}" Now I'm stuck with "{currentTaskDescription}" This task can only be done by me with a web search. I don't know how to ask. I need a query string to find the best answer.
 
 Please provide me only the query string to input into a search engine. Use the following format:
 Query: (The query string to use in a search engine in a natural language style. Format the query string as a question.)
 
-Now it's your turn."""}]
-    return prompt
+Now it's your turn.""",
+        }
+    ]

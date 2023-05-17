@@ -31,34 +31,19 @@ def system_message(message, style = Fore.GREEN) -> None:
 def debug_message(message, style = Fore.RED) -> None:
     print(f"{style}{message}{Style.RESET_ALL}")
 
-# Dictionary of options to display
-taskOptions = {
-    1: "Approve Task",
-    2: "Modify Task",
-    3: "Skip Task"
-}
-
-decompOrExecute = {
-    1: "Execute Task",
-    2: "Decompose Task",
-    3: "Retry"
-}
-
 # Ask user for options to input
 # Tests these options for validity
 def ask_options(options) -> int:
     while True:
         try:
-            system_message(f"Please select how to proceed further.")
-            system_message(f"Options: ")
-            for i, option in enumerate(options.values()):
-                system_message(f"{i+1}. {option}")
-
+            system_message("Please select how to proceed further.")
+            system_message("Options: ")
+            for i, option in enumerate(options.values(), start=1):
+                system_message(f"{i}. {option}")
             option = int(prompt_user_input("Please select an option: "))
-            if option in options.keys():
+            if option in options:
                 return option
-            else:
-                system_message("Invalid option.")
+            system_message("Invalid option.")
         except ValueError:
             system_message("Invalid option.")
 
@@ -79,15 +64,6 @@ def ask_yes_no(prompt) -> bool:
             system_message("Invalid input.")
 
 # Ask user to press any key to continue
-
 def press_any_key_to_continue() -> None:
     system_message("Press any key to continue...")
     input()
-
-def main() -> None:
-    result = ask_options(taskOptions)
-    print(result)
-
-if __name__ == "__main__":
-    main()
-

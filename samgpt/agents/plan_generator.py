@@ -9,7 +9,10 @@ from samgpt.utils.string_utils import format_plan_as_json
 
 # A function which creates a highly efficient prompt includes the user's goal
 def create_plan_prompt(goal) -> List:
-    prompt = [{'role': 'user', 'content': f"""I want "{goal}" I need a plan from you. All the tasks in the plan can only be done by me with the following commands:
+    return [
+        {
+            'role': 'user',
+            'content': f"""I want "{goal}" I need a plan from you. All the tasks in the plan can only be done by me with the following commands:
 
 $webSearch: Search the web for any query or topic if you are unsure.
 $createCode: Write programs in various programming languages for website creation, calculations, math tasks, applications, etc.
@@ -32,8 +35,9 @@ Plan:
 3. Step three
 etc.
 
-Now it is your turn."""}]
-    return prompt
+Now it is your turn.""",
+        }
+    ]
 
 
 def generate_plan(goal, callback) -> Tuple[str, List]:
@@ -42,7 +46,4 @@ def generate_plan(goal, callback) -> Tuple[str, List]:
     extractedPlan: str = extract_with_regex(response, "Plan:")
     jsonFormattedPlan: List = format_plan_as_json(extractedPlan)
 
-    if not extractedPlan:
-        return ("", [])
-    
-    return (response, jsonFormattedPlan)
+    return (response, jsonFormattedPlan) if extractedPlan else ("", [])

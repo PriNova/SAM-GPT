@@ -3,27 +3,20 @@ import json
 
 # extract the plan from text
 def extract_with_regex(text, prefix: str) -> str:
-    # Match numbered lists
-    match = re.search(fr'{prefix}\n+((?:\d+.+\n?)+)', text)  # corrected regex pattern
-    if match:
-        plan = re.sub(r'\n?\d+\..', '\n', match.group(1)).strip()
+    if match := re.search(fr'{prefix}\n+((?:\d+.+\n?)+)', text):
+        plan = re.sub(r'\n?\d+\..', '\n', match[1]).strip()
         return plan.strip()
 
-    # Match bulletted lists
-    match = re.search(fr'{prefix}\n+((?:•\s*.+\n?)+)', text)
-    if match:
-        plan = re.sub(r'(•\s*)', '', match.group(1)).strip()
+    if match := re.search(fr'{prefix}\n+((?:•\s*.+\n?)+)', text):
+        plan = re.sub(r'(•\s*)', '', match[1]).strip()
         return plan.strip()
 
-    # Match lined lists
-    match = re.search(fr'{prefix}\n+((?:-\s*.+\n?)+)', text)
-    if match:
-        plan = re.sub(r'(-\s*)', '', match.group(1)).strip()
+    if match := re.search(fr'{prefix}\n+((?:-\s*.+\n?)+)', text):
+        plan = re.sub(r'(-\s*)', '', match[1]).strip()
         return plan.strip()
-    
-    match = re.search(fr'{prefix}\n+([\s\S]*?)', text)
-    if match:
-        plan = match.group(1).strip()
+
+    if match := re.search(fr'{prefix}\n+([\s\S]*?)', text):
+        plan = match[1].strip()
         return plan.strip()
 
     # No matching pattern found

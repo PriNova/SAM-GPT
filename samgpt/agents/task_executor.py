@@ -7,10 +7,7 @@ def execute_task(response: str, userGoal: str, currentTaskDescription: str, call
     command = ""
     match response.split():
         case ["Command:", *object]:
-            if object[0][0] == '$':
-                command =  object[0][1:]
-            else:
-                command = object[0]
+            command = object[0][1:] if object[0][0] == '$' else object[0]
         case _:
             command = "No match"
     cmd.system_message(f"Command: {command}")

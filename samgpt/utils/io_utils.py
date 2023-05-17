@@ -11,7 +11,7 @@ def create_folder(folder: str) -> None:
 def save_plan(goal: str, plan: str, filename: str) -> None:
     path = get_working_dir(goal)
     os.makedirs(path, exist_ok=True)
-    with open(path + '/' + filename, "w") as f:
+    with open(f'{path}/{filename}', "w") as f:
         f.write(plan)
 
 # safe current task into file

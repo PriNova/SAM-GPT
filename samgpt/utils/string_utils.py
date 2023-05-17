@@ -5,17 +5,15 @@ def format_plan_as_json(extractedPlan: str) -> List:
     # Split the output into tasks using newline character
     tasks = extractedPlan.strip().split("\n")
 
-    # Create a list of dictionaries for each task
-    plan = [
+    return [
         {
             "id": f"{i + 1}",
             "description": task,
             "status": "Pending",
-            "tasks": []
+            "tasks": [],
         }
         for i, task in enumerate(tasks)
     ]
-    return plan
 
 def format_subtask_as_json(extractedSubtask: str, parentIndex: str) -> List:
     # Split the output into tasks using newline character

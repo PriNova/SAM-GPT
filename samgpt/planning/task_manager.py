@@ -3,9 +3,7 @@ from typing import Tuple
 
 # track the tasks and the plan based on the users goal
 def get_task(plan: List, index: int) -> Dict:
-    if index < len(plan):
-        return plan[index]
-    return {}
+    return plan[index] if index < len(plan) else {}
 
 # create a function to split the plan into a list
 def split_plan_into_tasks(plan) -> List[str]:
@@ -24,18 +22,11 @@ def update_task_by_id(plan: List, task_id: str, updated_info: Dict):
     task_index = int(task_id.split(".")[0]) - 1
 
     # Check if the task ID has a sub-task index
-    if "." in task_id:
-        subtask_index = int(task_id.split(".")[1]) - 1
-    else:
-        subtask_index = None
-
-    if subtask_index is not None:
-        # Update a sub-task
-        for key, value in updated_info.items():
+    subtask_index = int(task_id.split(".")[1]) - 1 if "." in task_id else None
+    for key, value in updated_info.items():
+        if subtask_index is not None:
             plan[task_index]["tasks"][subtask_index][key] = value
-    else:
-        # Update a task
-        for key, value in updated_info.items():
+        else:
             plan[task_index][key] = value
 
     # Return the updated plan
