@@ -9,8 +9,9 @@ init(autoreset=True)  # Automatically reset colors after each print
 # If input is empty, prompt again
 def prompt_user_input(prompt, style = Fore.BLUE) -> str:
     while True:
-        user_input = input(f"{style}{Style.BRIGHT}{prompt}{Style.RESET_ALL}")
-        if user_input:
+        if user_input := input(
+            f"{style}{Style.BRIGHT}{prompt}{Style.RESET_ALL}"
+        ):
             return user_input
         else:
             system_message("No input given!", style = Fore.RED)
