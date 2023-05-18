@@ -1,8 +1,7 @@
 from samgpt.nlp.nlp import start_multi_prompt_inference
 import samgpt.ui.command_line as cmd
-from samgpt.nlp.nlp import start_multi_prompt_inference
 
-from typing import List
+from typing import List, Dict
 import dotenv
 import requests
 import re
@@ -27,7 +26,7 @@ The result is:
 """}]
 
 def create_summarize_prompt(query: str, contents: str)-> List:
-    return [{'role': 'user', 'content':  f"""Query: "{query}"
+    return [{'role': 'user', 'content':  f"""Query: {query}
     Text:
     '''
     {contents}
@@ -46,7 +45,7 @@ def execute(userGoal: str, currentTaskDescription: str, callback)-> str:
     query = ""
     match response.split():
         case ["Query:", *_]:
-            query = response[5:]
+            query = response[5:].strip('"')
         case _:
             query = ""
 
@@ -54,7 +53,6 @@ def execute(userGoal: str, currentTaskDescription: str, callback)-> str:
     #print(contents)
     cmd.system_message('')
     cmd.system_message("SAM-GPT is collecting the responses of the web scraping!")
-
     cmd.system_message('')
     # summarize every scraped content from the contents list and create the final answer
     final_answer = ""
@@ -64,12 +62,12 @@ def execute(userGoal: str, currentTaskDescription: str, callback)-> str:
             if content:
                 summarize_prompt = create_summarize_prompt(query, content)
                 summarize = start_multi_prompt_inference(summarize_prompt, callback)
-                cmd.system_message('')
+                cmd.system_message('\n--- Summarized Content ---\n')
                 result += summarize
         if result:
             summary = '\n'.join(result).strip()
             prompt = create_answer_prompt(query, summary)
-            cmd.ai_message("\n The final answer: \n")
+            cmd.ai_message("\nThe final answer: \n")
             final_answer = start_multi_prompt_inference(prompt, callback)
         else:
             final_answer = "Sorry, I couldn't find any information for the query!"
@@ -82,20 +80,21 @@ def make_web_request2(query: str) -> List[str]:
     urls = []
     google_api = dotenv.get_key(".env", "GOOGLE_API")
     google_cx = dotenv.get_key(".env", "GOOGLE_CX")
-    url = "https://www.googleapis.com/customsearch/v1"
+    engine = "https://www.googleapis.com/customsearch/v1"
     params = {
-        "key": f"{google_api}",
-        "cx": f"{google_cx}",
-        "q": f"{query}",
-        "num": "5"
+    "key": google_api,
+    "cx": google_cx,
+    "q": f"{query}",
+    "num": "5"
     }
-    response = requests.get(url, params=params)
-    data = response.json()
-    urls = [url["link"] for url in data]
-    #print(results)
+    response = requests.get(engine, params=params)
+    response.raise_for_status()
+    data: Dict = response.json()
+    data_items: List = data["items"]
+    urls: List[str] = [url["link"] for url in data_items]
     return scrape_content(urls) if urls else []
 
-def scrape_content(results: List)-> List[str]:
+def scrape_content(results: List[str])-> List[str]:
     contents: List[str] = []
     for url in results:
         #try:
