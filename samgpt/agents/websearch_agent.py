@@ -79,14 +79,21 @@ def execute(userGoal: str, currentTaskDescription: str, callback)-> str:
         
 
 def make_web_request2(query: str) -> List[str]:
-    results = []
-    try:
-        from googlesearch import search
-        results.extend(iter(search(query, tld="com", num=5, stop=5, pause=1)))
-    except ImportError:
-        print("No module named 'google' found")
+    urls = []
+    google_api = dotenv.get_key(".env", "GOOGLE_API")
+    google_cx = dotenv.get_key(".env", "GOOGLE_CX")
+    url = "https://www.googleapis.com/customsearch/v1"
+    params = {
+        "key": f"{google_api}",
+        "cx": f"{google_cx}",
+        "q": f"{query}",
+        "num": "5"
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    urls = [url["link"] for url in data]
     #print(results)
-    return scrape_content(results) if results else []
+    return scrape_content(urls) if urls else []
 
 def scrape_content(results: List)-> List[str]:
     contents: List[str] = []
