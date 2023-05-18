@@ -7,7 +7,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-CHAR_LIMIT = 6000
+CHAR_LIMIT = 9000
 
 def create_answer_prompt(query: str, contents: str)-> List:
     return [{'role': 'user', 'content':  f"""Instructions:
@@ -52,7 +52,7 @@ def execute(userGoal: str, currentTaskDescription: str, callback)-> str:
     contents = make_web_request2(query) if query else []
     #print(contents)
     cmd.system_message('')
-    cmd.system_message("SAM-GPT is collecting the responses of the web scraping!")
+    cmd.system_message("SAM-GPT is collecting the responses from the web!")
     cmd.system_message('')
     # summarize every scraped content from the contents list and create the final answer
     final_answer = ""
@@ -62,7 +62,8 @@ def execute(userGoal: str, currentTaskDescription: str, callback)-> str:
             if content:
                 summarize_prompt = create_summarize_prompt(query, content)
                 summarize = start_multi_prompt_inference(summarize_prompt, callback)
-                cmd.system_message('\n--- Summarized Content ---\n')
+                cmd.system_message('')
+                cmd.system_message('--- Summarized Content ---\n')
                 result += summarize
         if result:
             summary = '\n'.join(result).strip()
@@ -82,11 +83,12 @@ def make_web_request2(query: str) -> List[str]:
     google_cx = dotenv.get_key(".env", "GOOGLE_CX")
     engine = "https://www.googleapis.com/customsearch/v1"
     params = {
-    "key": google_api,
-    "cx": google_cx,
-    "q": f"{query}",
-    "num": "5"
+        "key": google_api,
+        "cx": google_cx,
+        "q": f"{query}",
+        "num": "5"
     }
+
     response = requests.get(engine, params=params)
     response.raise_for_status()
     data: Dict = response.json()
@@ -149,8 +151,17 @@ def create_search_prompt(userGoal: str, currentTaskDescription: str) -> List:
             'content': f"""I want "{userGoal}" Now I'm stuck with "{currentTaskDescription}" This task can only be done by me with a web search. I don't know how to phrase my question to get the best results when searching.
 
 Please provide me only the query string to input into a search engine. Use the following format:
-Query: (The query string to use in a search engine)
+Query: (The query string to use in a search engine in the style of a complete spoken natural language question or instruction in one sentence)
 
-Now it's your turn.""",
+For example:
+###
+Task: Research and identify low-cost or free accommodation options in Europe.
+Query: "Find low-cost or free accommodation options in Europe."
+
+###
+Task: Identify potential locations to open a pet shop.
+Query: "Find best locations to open a pet shop."
+
+Task: {currentTaskDescription}""",
         }
     ]
