@@ -2,7 +2,7 @@ import samgpt.ui.command_line as cmd
 import samgpt.planning.task_manager as tm
 import samgpt.agents.task_delegator as td
 import samgpt.agents.plan_generator as pg
-import samgpt.utils.io_utils as ioutils
+import samgpt.utils.io as ioutils
 import samgpt.agents.task_executor as te
 import samgpt.configuration.options as opt
 
@@ -12,7 +12,7 @@ from typing import List, Dict
 import json
 import os
 
-import samgpt.utils.string_utils
+import samgpt.utils.string
 
 # The main entry point of the application
 def main():
@@ -81,7 +81,7 @@ def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
 
 def decompose_task(cPlan: List, currentTask: Dict, response: str) -> List:
     decompose = pg.extract_with_regex(response, '')
-    jsonFormattedDecomp: List = samgpt.utils.string_utils.format_subtask_as_json(decompose, currentTask['id'])
+    jsonFormattedDecomp: List = samgpt.utils.string.format_subtask_as_json(decompose, currentTask['id'])
     tm.find_and_add_subtask(cPlan, currentTask['id'], jsonFormattedDecomp)
     return cPlan
     

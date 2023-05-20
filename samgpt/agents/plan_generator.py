@@ -4,7 +4,7 @@ from samgpt.planning.plan_manager import extract_with_regex
 
 from typing import List, Tuple
 
-from samgpt.utils.string_utils import format_plan_as_json
+from samgpt.utils.string import format_plan_as_json
 
 
 # A function which creates a highly efficient prompt includes the user's goal

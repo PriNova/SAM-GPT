@@ -4,7 +4,7 @@ from typing import List, Dict, Optional, Any
 import dotenv
 
 import samgpt.configuration.options as options
-from samgpt.utils.http_utils import get_chat_completion
+from samgpt.utils.http import get_chat_completion
 
 
 
