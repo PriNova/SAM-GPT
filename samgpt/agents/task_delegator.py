@@ -36,7 +36,7 @@ $humanFeedback: Ask for human feedback or input if the task is unclear, ambiguou
 Please advice me, which command to use and why. Use the following formatting for your answer:
 "
 Command: (The command to use)
-Thoughts:  (Reason why the selected command is the best fit for the task)
+Thoughts: (Reason why the selected command is the best fit for the task)
 Critics: (Constructive self-critics regarding whether the decomposeTask command might be a better choice)
 Decomposition: (Decompose this task into prioritized, manageable and numbered subtasks. And please make sure that the subtasks are not already in the plan I mentioned above)"
 

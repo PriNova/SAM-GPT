@@ -6,8 +6,6 @@ import samgpt.utils.io as ioutils
 import samgpt.agents.task_executor as te
 import samgpt.configuration.options as opt
 
-
-
 from typing import List, Dict
 import json
 import os
