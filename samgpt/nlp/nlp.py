@@ -1,12 +1,10 @@
 """This module contains the functions used to interact with the NLP model"""
 
-from typing import List, Dict, Optional, Any
+from typing import Any, Dict, List, Optional
+
+import configuration.options as options
 import dotenv
-
-import samgpt.configuration.options as options
-from samgpt.utils.http import get_chat_completion
-
-
+from utils.http import get_chat_completion
 
 OPENAI_API_KEY : Optional[str] = dotenv.get_key('.env', 'OPENAI_API_KEY')
 
@@ -23,7 +21,8 @@ Model: Dict[str, List[Any]] = {
 model: List[Any] = Model['free']
 
 # Get the chat completion from the model
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 
 # Start the inference
 def start__simple_inference(role, prompt, callback) -> str:

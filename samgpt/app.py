@@ -1,16 +1,34 @@
-import samgpt.ui.command_line as cmd
-import samgpt.planning.task_manager as tm
-import samgpt.agents.task_delegator as td
-import samgpt.agents.plan_generator as pg
-import samgpt.utils.io as ioutils
-import samgpt.agents.task_executor as te
-import samgpt.configuration.options as opt
-
-from typing import List, Dict
 import json
 import os
+from typing import Dict, List
 
-import samgpt.utils.string
+import agents.plan_generator as pg
+import agents.task_delegator as td
+import agents.task_executor as te
+import configuration.options as opt
+import panel as pn
+import planning.task_manager as tm
+import ui.command_line as cmd
+import utils.io as ioutils
+import utils.string
+
+pn.config.template = 'material'
+
+
+def model(n=5):
+    return "⭐"*n
+
+def exit_app():
+    exit(0)
+
+def gui():
+    button = pn.widgets.Button(name ='New Project', sizing_mode='stretch_width')
+    open_project = pn.widgets.Button(name ='Open Project', sizing_mode='stretch_width')
+    exit_app = pn.widgets.Button(name ='Exit', sizing_mode='stretch_width')
+    return pn.Column(objects= [button, open_project, exit_app], 
+                     )
+
+gui().servable(target='main')
 
 # The main entry point of the application
 def main():
@@ -79,9 +97,9 @@ def manage_task(userGoal: str, cPlan: List, currentTask: Dict) -> Dict:
 
 def decompose_task(cPlan: List, currentTask: Dict, response: str) -> List:
     decompose = pg.extract_with_regex(response, '')
-    jsonFormattedDecomp: List = samgpt.utils.string.format_subtask_as_json(decompose, currentTask['id'])
+    jsonFormattedDecomp: List = utils.string.format_subtask_as_json(decompose, currentTask['id'])
     tm.find_and_add_subtask(cPlan, currentTask['id'], jsonFormattedDecomp)
     return cPlan
     
 if __name__ == "__main__":
-    main()
+    gui()
