@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python3 -m samgpt.app
+panel serve samgpt/app.py --show --autoreload

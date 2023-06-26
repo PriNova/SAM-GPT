@@ -25,8 +25,7 @@ def gui():
     button = pn.widgets.Button(name ='New Project', sizing_mode='stretch_width')
     open_project = pn.widgets.Button(name ='Open Project', sizing_mode='stretch_width')
     exit_app = pn.widgets.Button(name ='Exit', sizing_mode='stretch_width')
-    return pn.Column(objects= [button, open_project, exit_app], 
-                     )
+    return pn.Column(objects= [button, open_project, exit_app])
 
 gui().servable(target='main')
 
