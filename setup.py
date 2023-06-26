@@ -10,7 +10,7 @@ setup(
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "samgpt=samgpt.app:main"
+            "samgpt=samgpt.app:"
         ]
     }
 )

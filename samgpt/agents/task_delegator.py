@@ -1,7 +1,7 @@
 from typing import Dict, List
-import samgpt.nlp.nlp as nlp
-from samgpt.planning.task_manager import extract_plan_tasks
-import samgpt.ui.command_line as cmd
+import nlp.nlp as nlp
+from planning.task_manager import extract_plan_tasks
+import ui.command_line as cmd
 import json
 
 # Delegation of tasks to task executors

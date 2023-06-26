@@ -1,5 +1,5 @@
-from samgpt.nlp.nlp import start_multi_prompt_inference
-import samgpt.ui.command_line as cmd
+from nlp.nlp import start_multi_prompt_inference
+import ui.command_line as cmd
 
 from typing import List, Dict
 import dotenv

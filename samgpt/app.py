@@ -18,16 +18,16 @@ pn.config.template = 'material'
 def model(n=5):
     return "⭐"*n
 
-def exit_app():
-    exit(0)
+
 
 def gui():
-    button = pn.widgets.Button(name ='New Project', sizing_mode='stretch_width')
+    new_project = pn.widgets.Button(name ='New Project', sizing_mode='stretch_width')
     open_project = pn.widgets.Button(name ='Open Project', sizing_mode='stretch_width')
     exit_app = pn.widgets.Button(name ='Exit', sizing_mode='stretch_width')
-    return pn.Column(objects= [button, open_project, exit_app])
+    return pn.Column(objects= [new_project, open_project, exit_app])
 
 gui().servable(target='main')
+#pn.serve(gui, title="Sam-GPT", threaded=True, port=3333)
 
 # The main entry point of the application
 def main():
@@ -101,4 +101,5 @@ def decompose_task(cPlan: List, currentTask: Dict, response: str) -> List:
     return cPlan
     
 if __name__ == "__main__":
-    gui()
+    gui().servable(target='main')
+    #pn.serve(gui, title="Sam-GPT", threaded=True, port=3333, kwargs={"autoreload": True})

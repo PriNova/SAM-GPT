@@ -1,6 +1,6 @@
 from typing import Dict
-import samgpt.agents.websearch_agent as webSearchAgent
-import samgpt.ui.command_line as cmd
+import agents.websearch_agent as webSearchAgent
+import ui.command_line as cmd
 
 def execute_task(response: str, userGoal: str, currentTaskDescription: str, callback) -> str:
     command = ""
