@@ -26,22 +26,16 @@ def create_project():
 
 def new_project(column: pn.Column):
     def on_click(event):
-        column.objects.
-        for child in column:
-            if (
-                isinstance(child, pn.FloatPanel)
-                and child.id != 'new_project_modal'
-            ):
-                modal = pn.layout.FloatPanel(
-                    pn.widgets.TextInput(name='Project Name'),
-                    pn.widgets.Button(name='OK', button_type='primary'),
-                    title='New Project',
-                    width=400,
-                    height=200,
-                    contained = True,
-                    id='new_project_modal'
-                )
-                column.append(modal)
+        modal = pn.layout.FloatPanel(
+            pn.widgets.TextInput(name='Project Name'),
+            pn.widgets.Button(name='OK', button_type='primary'),
+            title='New Project',
+            width=400,
+            height=200,
+            contained = True,
+            id='new_project_modal'
+        )
+        column.append(modal)
     return on_click
 
 
@@ -79,33 +73,37 @@ def generate_plan(userGoal: str) -> List | None:
 # The main entry point of the application
 def main():
     userGoal = introducing()
-    if plan := generate_plan(userGoal=userGoal):
-        currentTask : Dict = tm.get_task(plan=plan, index=0)
-        while True:
-            currentTask = manage_task(userGoal, plan, currentTask)
-            cmd.system_message("Hold on. SAM-GPT will delegate your task.")
-            cmd.system_message("\n")
-            response = td.delegate_task(userGoal, plan, currentTask, cmd.ai_message)
-            cmd.system_message('')
-            
-            task_option: int = cmd.ask_options(opt.decompOrExecute)
-            if task_option == 1:
-                # Execute the current task
-                execution = te.execute_task(response, userGoal, currentTask['description'], cmd.ai_message)
-                # cmd.ai_message(f"Here is my execution:\n{execution}")
-                currentTask['status'] = "Completed"
-                currentTask = tm.find_next_pending_task(plan)
-                ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
-                ioutils.save_current_task(userGoal, currentTask)
-            elif task_option == 2:
-                # Decompose the current task
-                cmd.system_message("Hold on. SAM-GPT will decompose your task.")
-                plan = decompose_task(plan, currentTask, response)
-                currentTask = tm.find_next_pending_task(plan)
-                ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
-                if currentTask == {}:
-                    cmd.system_message("Congratulations! You have completed your goal!")
-                    os._exit(0)
+    plan = generate_plan(userGoal=userGoal)
+    if not plan:
+        cmd.system_message("Plan cannot be generated!")
+        return
+    
+    currentTask : Dict = tm.get_task(plan=plan, index=0)
+    while True:
+        currentTask = manage_task(userGoal, plan, currentTask)
+        cmd.system_message("Hold on. SAM-GPT will delegate your task.")
+        cmd.system_message("\n")
+        response = td.delegate_task(userGoal, plan, currentTask, cmd.ai_message)
+        cmd.system_message('')
+        
+        task_option: int = cmd.ask_options(opt.decompOrExecute)
+        if task_option == 1:
+            # Execute the current task
+            execution = te.execute_task(response, userGoal, currentTask['description'], cmd.ai_message)
+            # cmd.ai_message(f"Here is my execution:\n{execution}")
+            currentTask['status'] = "Completed"
+            currentTask = tm.find_next_pending_task(plan)
+            ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
+            ioutils.save_current_task(userGoal, currentTask)
+        elif task_option == 2:
+            # Decompose the current task
+            cmd.system_message("Hold on. SAM-GPT will decompose your task.")
+            plan = decompose_task(plan, currentTask, response)
+            currentTask = tm.find_next_pending_task(plan)
+            ioutils.save_plan(userGoal, json.dumps(plan), "plan.json")
+            if currentTask == {}:
+                cmd.system_message("Congratulations! You have completed your goal!")
+                os._exit(0)
 
 
 

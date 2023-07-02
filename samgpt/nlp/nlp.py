@@ -1,31 +1,23 @@
 """This module contains the functions used to interact with the NLP model"""
 
-from typing import Any, Dict, List, Optional
-
+from typing import List, Optional
+from enum import Enum
 import configuration.options as options
 import dotenv
 from utils.http import get_chat_completion
 
 OPENAI_API_KEY : Optional[str] = dotenv.get_key('.env', 'OPENAI_API_KEY')
 
-openaiModel: List[Any] = ['https://api.openai.com/v1/chat/completions', OPENAI_API_KEY]
-freeModel: List[Any] = ['https://free.churchless.tech/v1/chat/completions', '']
+class Model(Enum):
+    OPENAI = ['https://api.openai.com/v1/chat/completions', OPENAI_API_KEY]
+    FREE = ['https://free.churchless.tech/v1/chat/completions', '']
 
-# define the Model enum
-Model: Dict[str, List[Any]] = {
-    'openai': openaiModel,
-    'free': freeModel
-    }
-
-# Get the model from the Model enu
-model: List[Any] = Model['free']
-
-# Get the chat completion from the model
-from typing import Any, Dict, List
+# Get the model from the Model enum
+model: List[str] = Model.FREE.value
 
 
 # Start the inference
-def start__simple_inference(role, prompt, callback) -> str:
+def start_simple_inference(role, prompt, callback) -> str:
     return get_chat_completion(
         model=model,
         messages=[{'role': role, 'content': prompt}],
