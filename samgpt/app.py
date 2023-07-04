@@ -25,15 +25,26 @@ def create_project():
 
 
 def new_project(column: pn.Column):
+    modal = None
     def on_click(event):
+        nonlocal modal
+        config = {
+            "headerControls": {
+                "close": "remove"
+            },
+            "position": "center"
+        }
+        if modal:
+            column.remove(modal)
         modal = pn.layout.FloatPanel(
             pn.widgets.TextInput(name='Project Name'),
-            pn.widgets.Button(name='OK', button_type='primary'),
-            title='New Project',
+            pn.widgets.Button(name='OK', button_type='primary', on_click=lambda _: column.remove(modal)),
+            name='New Project',
             width=400,
-            height=200,
-            contained = True,
-            id='new_project_modal'
+            height=None,
+            sizing_mode='stretch_height',
+            contained = False,
+            config=config
         )
         column.append(modal)
     return on_click
