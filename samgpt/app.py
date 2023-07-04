@@ -40,13 +40,13 @@ def new_project(column: pn.Column):
 
 
 def start_screen():
-    coloumn = pn.WidgetBox()
+    column = pn.Column()
     new_project_button = pn.widgets.Button(name ='New Project', sizing_mode='stretch_width')
-    new_project_button.on_click(new_project(coloumn))
+    new_project_button.on_click(new_project(column=column))
     open_project = pn.widgets.Button(name ='Open Project', sizing_mode='stretch_width')
     exit_app = pn.widgets.Button(name ='Exit', sizing_mode='stretch_width')
-    coloumn.extend(objects= [new_project_button, open_project, exit_app])
-    return coloumn
+    column.extend(objects= [new_project_button, open_project, exit_app])
+    return column
 
 def gui():
     return start_screen()
