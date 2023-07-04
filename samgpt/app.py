@@ -14,8 +14,32 @@ import utils.string
 import os as timer
 
 import panel as pn
+import param
 pn.config.template = 'material'
 pn.extension('floatpanel')
+
+class ListBoxItem(pn.Row):
+    """A single item in the ListBox"""
+    def __init__(self, name, **kwargs):
+        self._button = pn.widgets.Button(name="OPEN", width=70, height=30)
+        self._name = pn.widgets.StaticText(value=f"{name}", align="center")
+        super().__init__(**kwargs)
+        self.extend([self._name, self._button])
+    def on_click(self, callback):
+        self._button.on_click(callback)
+
+class ListBox(pn.Column):
+    """A list box with multiple selectable items"""
+    def __init__(self, items):
+        config = {
+            "position": "center"
+        }
+        self.items = []
+        for name in items:
+            item = ListBoxItem(name=name)
+            self.items.append(item)
+            #item.on_click(lambda name=name: print(f'Selected {name}'))
+        super().__init__(*self.items, config=config)
 
 def create_project():
     return pn.Row(
@@ -51,18 +75,21 @@ def new_project(column: pn.Column):
 
 
 def start_screen():
+    project_list = ['Project 1', 'Project 2', 'Project 3']
+    
     column = pn.Column()
-    new_project_button = pn.widgets.Button(name ='New Project', sizing_mode='stretch_width')
+    new_project_button = pn.widgets.Button(name ='New Project', width = 300, )
     new_project_button.on_click(new_project(column=column))
-    open_project = pn.widgets.Button(name ='Open Project', sizing_mode='stretch_width')
-    exit_app = pn.widgets.Button(name ='Exit', sizing_mode='stretch_width')
-    column.extend(objects= [new_project_button, open_project, exit_app])
+    
+    lb = ListBox(project_list)
+    box = pn.Row(lb, align="center")
+    column.extend(objects= [new_project_button, box])
     return column
 
 def gui():
     return start_screen()
 
-gui().servable(target='main')
+gui().servable(title="SAM-GPT", target='main')
 #pn.serve(gui, title="Sam-GPT", threaded=True, port=3333)
 def introducing() -> str:
     cmd.system_message("Welcome to SAM-GPT!")
