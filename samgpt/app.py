@@ -14,75 +14,71 @@ import utils.string
 import os as timer
 
 import panel as pn
-import param
+import param as par
 pn.config.template = 'material'
 pn.extension('floatpanel')
 
-class ListBoxItem(pn.Row):
-    """A single item in the ListBox"""
-    def __init__(self, name, **kwargs):
-        self._button = pn.widgets.Button(name="OPEN", width=70, height=30)
-        self._name = pn.widgets.StaticText(value=f"{name}", align="center")
-        super().__init__(**kwargs)
-        self.extend([self._name, self._button])
-    def on_click(self, callback):
-        self._button.on_click(callback)
+def create_ListBoxItem(text):
+    open_button = pn.widgets.Button(name="OPEN", width=70, height=30)
+    label = pn.widgets.StaticText(value=text, align="center")
+    return pn.Row(label, open_button)
 
-class ListBox(pn.Column):
-    """A list box with multiple selectable items"""
-    def __init__(self, items):
-        config = {
-            "position": "center"
-        }
-        self.items = []
-        for name in items:
-            item = ListBoxItem(name=name)
-            self.items.append(item)
-            #item.on_click(lambda name=name: print(f'Selected {name}'))
-        super().__init__(*self.items, config=config)
+def create_ListBox(names):
+    items = []
+    for name in names:
+        item = create_ListBoxItem(text=name)
+        items.append(item)
+    return pn.Column(*items)
 
-def create_project():
-    return pn.Row(
-        pn.widgets.StaticText(value="Project Name: "),
-        pn.widgets.TextInput(placeholder="Type the project name here", sizing_mode='stretch_width'),
-    )
+def has(panel, widget: pn.Column):
+    for child in panel:
+        if child is widget:
+            return True
 
+project_list = []
 
-def new_project(column: pn.Column):
+def add_project(name, column, modal, listBox):
+    def on_click(event):
+        list_item = create_ListBoxItem(name)
+        listBox.append(list_item)
+        column.remove(modal)
+    return on_click
+
+def create_modal(column, lb):
+    config = {
+        "headerControls": {
+            "close": "remove"
+        },
+        "position": "center"
+    }
+    project_name = pn.widgets.TextInput(name='Project Name')
+    modal = pn.layout.FloatPanel(project_name, name='New Project',
+        width=400,
+        height=None,
+        sizing_mode='stretch_height',
+        contained = False,
+        config=config)
+    ok_button = pn.widgets.Button(name='OK', button_type='primary')
+    ok_button.on_click(add_project(project_name, column, modal, lb))
+    modal.append(ok_button)
+    return modal
+
+def new_project(column: pn.Column, lb):
     modal = None
     def on_click(event):
         nonlocal modal
-        config = {
-            "headerControls": {
-                "close": "remove"
-            },
-            "position": "center"
-        }
-        if modal:
+        if has(column, modal):
             column.remove(modal)
-        modal = pn.layout.FloatPanel(
-            pn.widgets.TextInput(name='Project Name'),
-            pn.widgets.Button(name='OK', button_type='primary', on_click=lambda _: column.remove(modal)),
-            name='New Project',
-            width=400,
-            height=None,
-            sizing_mode='stretch_height',
-            contained = False,
-            config=config
-        )
+        modal = create_modal(column, lb)
         column.append(modal)
     return on_click
 
-
 def start_screen():
-    project_list = ['Project 1', 'Project 2', 'Project 3']
-    
     column = pn.Column()
-    new_project_button = pn.widgets.Button(name ='New Project', width = 300, )
-    new_project_button.on_click(new_project(column=column))
-    
-    lb = ListBox(project_list)
+    lb = create_ListBox(project_list)
     box = pn.Row(lb, align="center")
+    new_project_button = pn.widgets.Button(name ='New Project', width = 300, )
+    new_project_button.on_click(new_project(column, lb))
     column.extend(objects= [new_project_button, box])
     return column
 
@@ -91,6 +87,7 @@ def gui():
 
 gui().servable(title="SAM-GPT", target='main')
 #pn.serve(gui, title="Sam-GPT", threaded=True, port=3333)
+
 def introducing() -> str:
     cmd.system_message("Welcome to SAM-GPT!")
     userGoal: str = cmd.prompt_user_input("Please input your goal: ")
