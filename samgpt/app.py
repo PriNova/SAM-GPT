@@ -14,9 +14,8 @@ import ui.gui as guis
 import utils.io as ioutils
 import utils.string
 
-pn.config.template = 'material'
+pn.config.template = 'fast'
 #pn.extension('floatpanel')
-
 
 def gui():
     return guis.start_screen()
